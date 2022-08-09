@@ -29,13 +29,11 @@ const bottomNavItems = [
 class Bottombar extends Component {
     render() {
         return (
-            <div>
-                <BottomNavigation
-                    items={bottomNavItems}
-                    defaultSelected={0}
-                    onItemClick={(item) => console.log(item)}
-                />
-            </div>
+            <BottomNavigation
+                items={bottomNavItems}
+                defaultSelected={0}
+                onItemClick={(item) => console.log(item)}
+            />
         )
     }
 }

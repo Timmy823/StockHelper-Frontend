@@ -23,8 +23,8 @@ setting = {
 *** */
 function LineChart(root, LineData, setting){
     const margin = { top: 5, right: 15, bottom: 0, left: 20},
-        width = document.querySelector(`.${root}`).clientWidth,
-        height = document.querySelector(`.${root}`).clientHeight;
+        width = root.clientWidth,
+        height = root.clientHeight;
 
     const parseTime = setting.oneday_timeformat 
         ? d3.timeParse("%H:%M:%S") 
@@ -38,7 +38,7 @@ function LineChart(root, LineData, setting){
         }))
     }));
 
-    const svg = d3.select(document.querySelector(`.${root}`))
+    const svg = d3.select(root)
         .append('svg')
         .attr('width', width)
         .attr('height', height)
