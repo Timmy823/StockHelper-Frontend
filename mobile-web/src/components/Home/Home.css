@@ -1,0 +1,12 @@
+.stock-home-page {
+    margin: 10px 5px 70px 5px;
+}
+  
+.stock-index, .hot-stock, .hot-etf {
+    padding: 5px;
+}
+
+h3 {
+    margin: 2px 0px;
+    color: white;
+}
