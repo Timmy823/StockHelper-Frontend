@@ -1,7 +1,6 @@
 import React from "react";
-import StockSearch from "../Search/StockSearch";
-import MainInstantStock from "../Card/MainInstantStock";
-import Bottombar from "../Tabbar/Bottombar";
+import StockSearch from "../../components/Search/StockSearch";
+import MainInstantStock from "../../components/Card/MainInstantStock";
 import "./Home.css"
 
 const Home = () => {

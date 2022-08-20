@@ -1,6 +1,6 @@
 import React from "react";
-import ListInstantStock from "../Card/ListInstantStock";
-import "./Favorite.css"
+import ListInstantStock from "../../components/Card/ListInstantStock";
+import "./Favorite.css";
 
 const Favorite = () => {
     return (
