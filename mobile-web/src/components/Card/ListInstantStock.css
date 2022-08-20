@@ -1,0 +1,39 @@
+.list-instant-stock {
+    /* 對父元素採用inline-block，flex則讓子元素inline-block */
+    display: inline-flex;
+    width: 100%;
+    margin: 0px 3px;
+    padding: 5px;
+    background-color: #545454;
+}
+
+.stock-info,
+.trend-info {
+    width: 25%;
+}
+
+.trend-info {
+    text-align: center;
+}
+
+.instant-trend {
+    width: 50%;
+    padding: 1px;
+}
+
+h5, h6 {
+    margin: 2px 0px;
+    color: white;
+}
+
+.stock-info p,
+.trend-info p{
+    margin: 0;
+    font-size: x-small;
+    color: white;
+}
+.clear {
+    clear: both; 
+    height: 0;
+    height: 0;
+}
