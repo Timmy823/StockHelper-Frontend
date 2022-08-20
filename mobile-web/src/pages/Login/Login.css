@@ -1,0 +1,3 @@
+.form-outline .form-control~.form-label {
+    color: white;
+}

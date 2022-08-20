@@ -7,16 +7,16 @@
     background-color: #545454;
 }
 
-.stock-info,
-.trend-info {
+.list-instant-stock .stock-info,
+.list-instant-stock .trend-info {
     width: 25%;
 }
 
-.trend-info {
+.list-instant-stock .trend-info {
     text-align: center;
 }
 
-.instant-trend {
+.list-instant-stock .instant-trend {
     width: 50%;
     padding: 1px;
 }
@@ -32,6 +32,7 @@ h5, h6 {
     font-size: x-small;
     color: white;
 }
+
 .clear {
     clear: both; 
     height: 0;

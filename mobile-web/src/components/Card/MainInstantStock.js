@@ -1,6 +1,6 @@
-import React, { useEffect } from "react"
+import React, { useEffect } from "react";
 import LineChart from "../Chart/LineChart";
-import "./MainInstantStock.css"
+import "./MainInstantStock.css";
 
 const MainInstantStock = (props) => {
     const data = [
@@ -38,11 +38,9 @@ const MainInstantStock = (props) => {
         }
     }
 
-    
     useEffect(() => {
-        let root = document.querySelector(`.${props.className} .instant-trend`)
-        console.log(root);
-        LineChart(root, data, setting)
+        let root = document.querySelector(`.${props.className} .instant-trend`);
+        LineChart(root, data, setting);
     })
 
     return (
@@ -59,6 +57,6 @@ const MainInstantStock = (props) => {
             </div>
             <div className = 'instant-trend' />
         </div>
-    )
+    );
 }
 export default MainInstantStock

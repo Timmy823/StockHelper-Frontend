@@ -1,7 +1,7 @@
-import React from "react"
+import React from "react";
 import { useNavigate } from "react-router";
-import BottomNavigation from "reactjs-bottom-navigation"
-import "./Bottombar.css"
+import BottomNavigation from "reactjs-bottom-navigation";
+import "./Bottombar.css";
 import HomeOnClickPNG from '../../image/bottombar/home_onclick.png';
 import HomeNoClickPNG from '../../image/bottombar/home_noclick.png';
 import FavoriteOnClickPNG from '../../image/bottombar/favorite_onclick.png';
@@ -33,6 +33,7 @@ const bottomNavItems = [
 const Bottombar = (props) => {
     let navigate = useNavigate();
     const currentIndex = props.index;
+
     return (
         <BottomNavigation
             items={bottomNavItems}

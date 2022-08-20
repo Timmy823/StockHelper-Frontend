@@ -7,13 +7,12 @@ import {
   MDBIcon
 }
 from 'mdb-react-ui-kit';
-import 'mdb-react-ui-kit/dist/css/mdb.min.css'
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import './Login.css';
 
 const Login = () => {
     return (
-        
         <MDBContainer className="p-3 my-5 d-flex flex-column w-90">
-
             <MDBInput wrapperClass='mb-4' label='Email address' id='form1' type='email'/>
             <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password'/>
 
@@ -46,9 +45,7 @@ const Login = () => {
                     </MDBBtn>
                 </div>
             </div>
-
         </MDBContainer>
     );
 }
-
 export default Login
