@@ -1,3 +1,6 @@
 .form-outline .form-control~.form-label {
     color: white;
 }
+.list-group-item {
+    background-color: var(--mdb-body-bg);
+}
