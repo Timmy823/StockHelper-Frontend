@@ -17,7 +17,7 @@ const CodeVerification = () => {
             <MDBBtn className='w-100' onClick={
                 () => {
                     if(document.getElementsByName('verification_code')[0].value === '123456') {
-                        navigate('/forget_password');
+                        navigate('/reset_password');
                     }
                     else {
                         console.log("驗證碼錯誤");
