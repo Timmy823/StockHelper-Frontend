@@ -9,6 +9,7 @@ import Bottombar from "../../components/Tabbar/Bottombar";
 import Account from "../Account/Account";
 import Login from "../Account/Login";
 import Register from "../Account/Register";
+import CodeVerification from "../Account/CodeVerification";
 
 const Main = () => {
     return (
@@ -33,6 +34,10 @@ const Main = () => {
             </>} />
             <Route path='/register' element={<>
                 <Register />
+                <Bottombar index={2}/>
+            </>} />
+            <Route path='/verify_code' element={<>
+                <CodeVerification />
                 <Bottombar index={2}/>
             </>} />
         </Routes>
