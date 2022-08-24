@@ -10,6 +10,7 @@ import Account from "../Account/Account";
 import Login from "../Account/Login";
 import Register from "../Account/Register";
 import CodeVerification from "../Account/CodeVerification";
+import ResetPassword from "../Account/ResetPassword";
 
 const Main = () => {
     return (
@@ -38,6 +39,10 @@ const Main = () => {
             </>} />
             <Route path='/verify_code' element={<>
                 <CodeVerification />
+                <Bottombar index={2}/>
+            </>} />
+            <Route path='/reset_password' element={<>
+                <ResetPassword />
                 <Bottombar index={2}/>
             </>} />
         </Routes>
