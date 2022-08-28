@@ -4,3 +4,15 @@
 .list-group-item {
     background-color: var(--mdb-body-bg);
 }
+
+.error-message.active{
+    color: red;
+}
+
+.error-message.hidden{
+    color: var(--mdb-body-bg);
+}
+
+.register-container .text-center p{
+    margin: 0;
+}
