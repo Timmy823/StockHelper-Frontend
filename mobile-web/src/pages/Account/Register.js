@@ -62,7 +62,8 @@ const Register = () => {
                     password_confirm: Yup.string()
                         .when('password', (password, schema) => {
                             return password ? schema.oneOf([password], '*密碼需相同').required() : schema
-                        }),
+                        })
+                        .required("*密碼需相同"),
                     name: Yup.string()
                         .required("*名稱不能為空"),
                     telphone: Yup.string()
