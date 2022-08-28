@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
 import {
@@ -13,6 +14,32 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './Account.css';
 
 const Register = () => {
+    const navigate = useNavigate();
+    const createMember = async (req_body, callback) => {
+        const request = await fetch( 'http://localhost:5277/member/createMember', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(req_body)
+        });
+
+        let response = await request.json();
+        if (request.status == 200) {
+            callback(response);
+        } else {
+            callback({
+                "metadata": {
+                    "status": "error",
+                    "desc": "註冊失敗，請聯絡客服"
+                },
+                "data": {
+                    "data": ""
+                }
+            });
+        }
+    };
+
     return (
         <MDBContainer className="register-container p-3 mt-1 mb-6 d-flex flex-column w-100">
             <h3>註冊</h3>
@@ -43,10 +70,23 @@ const Register = () => {
                     agreecheckbox: Yup.boolean()
                         .isTrue("需同意服務條款")
                 })}
-                onSubmit={(values, { resetForm }) => {
-                    console.log('submit');
-                    console.log(values);
-                    resetForm();
+                onSubmit={(value, { resetForm }) => {
+                    createMember({
+                        "member_account": value.email,
+                        "password": value.password,
+                        "login_type": "Registered",
+                        "member_name": value.name,
+                        "telephone": value.telphone
+                    }, (response) => {
+                        if(response.metadata.status == 'success') 
+                            navigate('/login');
+    
+                        document.getElementsByClassName('register-message')[0].innerHTML = response.metadata.desc;
+                        document.getElementsByClassName('register-message')[0].classList.remove("hidden");
+                        document.getElementsByClassName('register-message')[0].classList.add("active");
+                        resetForm();
+                    });
+
                 }}
             >
                 {({errors, touched}) => (
@@ -85,6 +125,7 @@ const Register = () => {
                             <MDBBtn className="mb-2 mx-2 w-50" type="submit">送出</MDBBtn>
                             <MDBBtn tag='a' href='/login' className="btn-light mb-2 mx-2 w-50">取消</MDBBtn>
                         </div>
+                        <div className='register-message hidden'> 註冊結果 </div>
                     </Form> 
                 )}
             </Formik>
