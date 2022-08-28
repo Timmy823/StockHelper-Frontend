@@ -58,6 +58,7 @@ const Register = () => {
                         .required("*電子信箱不能為空"),
                     password: Yup.string()
                         .matches(/^[A-Za-z0-9]{9,16}$/,"*密碼長度為9-16之間的大小寫英文字母或數字")
+                        .matches(/^.*(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/, "*大小寫英文字母或數字必須皆有")
                         .required("*密碼不能為空"),
                     password_confirm: Yup.string()
                         .when('password', (password, schema) => {
