@@ -4,3 +4,24 @@
 .list-group-item {
     background-color: var(--mdb-body-bg);
 }
+
+input[name="password"],
+input[name="password_confirm"] {
+    -webkit-text-security: disc;
+}
+
+.error-message.active,
+.register-message.active {
+    color: red;
+}
+
+.error-message.hidden,
+.register-message.hidden {
+    color: var(--mdb-body-bg);
+}
+
+.register-container .text-center p{
+    margin: 0;
+}
+
+
