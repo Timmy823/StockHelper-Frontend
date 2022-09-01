@@ -1,30 +1,38 @@
-.main-instant-stock {
+.list-instant-stock {
     /* 對父元素採用inline-block，flex則讓子元素inline-block */
     display: inline-flex;
-    width: 48%;
-    margin: 3px;
+    width: 100%;
+    margin: 0px 3px;
     padding: 5px;
     background-color: #545454;
 }
-.main-instant-stock .stock-info {
-    width: 40%;
+
+.list-instant-stock .stock-info,
+.list-instant-stock .trend-info {
+    width: 25%;
 }
 
-.main-instant-stock .instant-trend {
-    width: 60%;
+.list-instant-stock .trend-info {
+    text-align: center;
+}
+
+.list-instant-stock .instant-trend {
+    width: 50%;
     padding: 1px;
 }
 
-h4, h5, h6 {
+h5, h6 {
     margin: 2px 0px;
     color: white;
 }
 
-.main-instant-stock .stock-info p {
+.stock-info p,
+.trend-info p{
     margin: 0;
     font-size: x-small;
     color: white;
 }
+
 .clear {
     clear: both; 
     height: 0;

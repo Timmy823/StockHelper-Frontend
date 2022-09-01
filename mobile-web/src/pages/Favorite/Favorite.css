@@ -1,0 +1,21 @@
+.favorite-page {
+    margin: 10px 5px 70px 5px;
+}
+
+.option-button-list {
+    display: -webkit-inline-box;
+    overflow: scroll;
+}
+
+.favorite-page .option-button-list li {
+    padding: 5px 10px 0px 10px;
+    list-style: none;
+    color: white;
+}
+.favorite-page .option-button-list .selected {
+    background-color: blue;
+}
+
+hr {
+    margin: 0px !important;
+}

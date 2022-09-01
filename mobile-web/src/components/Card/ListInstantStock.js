@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import LineChart from "../Chart/LineChart";
-import "./MainInstantStock.css";
+import "./ListInstantStock.css";
 
-const MainInstantStock = (props) => {
+const ListInstantStock = (props) => {
     const data = [
         {
             name : 'index',
@@ -30,6 +30,7 @@ const MainInstantStock = (props) => {
             ]
         }
     ]
+
     const setting = {
         oneday_timeformat : true,
         xy_axis : false,
@@ -44,19 +45,17 @@ const MainInstantStock = (props) => {
     })
 
     return (
-        <div className={ "main-instant-stock " + (props.className || "") }>
-            <div className = 'stock-info'>
-                <div>
-                    <h5> 台積電 </h5>
-                    <p> 2330 上市</p>
-                </div>
-                <div>
-                    <h4> 516.5 </h4>
-                    <p> +1.5% </p>
-                </div>
+        <div className={ 'list-instant-stock ' + (props.className || '') }>
+            <div className='stock-info'>
+                <h6> 台積電 </h6>
+                <p> 2330 上市</p>
             </div>
-            <div className = 'instant-trend' />
+            <div className='trend-info'>
+                <h5> 516.5 </h5>
+                <p> +1.5% </p>
+            </div>
+            <div className='instant-trend' />
         </div>
     );
 }
-export default MainInstantStock
+export default ListInstantStock;
