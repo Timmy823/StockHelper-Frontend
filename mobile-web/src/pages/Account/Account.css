@@ -11,12 +11,14 @@ input[name="password_confirm"] {
 }
 
 .error-message.active,
-.register-message.active {
+.register-message.active,
+.login-message.active {
     color: red;
 }
 
 .error-message.hidden,
-.register-message.hidden {
+.register-message.hidden,
+.login-message.hidden {
     color: var(--mdb-body-bg);
 }
 
