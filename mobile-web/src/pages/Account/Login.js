@@ -43,7 +43,7 @@ const Login = () => {
         <MDBContainer className="p-3 mt-1 d-flex flex-column w-100">
             <h3>登入</h3>
             <Formik
-                initialValues={{ 
+                initialValues={{
                     account: undefined, 
                     password: undefined
                 }}
@@ -68,6 +68,8 @@ const Login = () => {
                         document.getElementsByClassName('login-message')[0].innerHTML = response.metadata.desc;
                         document.getElementsByClassName('login-message')[0].classList.remove("hidden");
                         document.getElementsByClassName('login-message')[0].classList.add("active");
+
+                        resetForm();
                     });
                 }}
             >
@@ -82,17 +84,17 @@ const Login = () => {
                         {errors.password && touched.password ? (
                             <div className='error-message active'>{errors.password}</div>
                         ) : <div className='error-message hidden'>正確格式</div>}
+
+                        <div className="d-flex justify-content-between mx-3 my-2">
+                            <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='記住帳號密碼' />
+                            <a href="!#">忘記密碼?</a>
+                        </div>
+                        <div className='login-message hidden'> 登入成功 </div>
+                        <MDBBtn className="mb-4 w-100">登入</MDBBtn>
                     </Form>
                 )}
             </Formik>
 
-            <div className="d-flex justify-content-between mx-3 my-2">
-                <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='記住帳號密碼' />
-                <a href="!#">忘記密碼?</a>
-            </div>
-            <div className='login-message hidden'> 登入成功 </div>
-            <MDBBtn className="mb-4">登入</MDBBtn>
-            
             <div className="text-center">
                 <p>尚未擁有帳號? <a href="/register">註冊</a></p>
                 <p>或 以下列方式登入:</p>
