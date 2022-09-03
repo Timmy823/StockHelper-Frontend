@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
+import { setAuthToken } from '../../utils/TokenUtils';
 import {
   MDBContainer,
   MDBInput,
@@ -15,8 +16,10 @@ import './Account.css';
 
 const Login = () => {
     const navigate = useNavigate();
-    const Login = async (req_body, callback) => {
-        const request = await fetch( 'http://localhost:5277/member/getMemberInfo', {
+    const login_token = 'account_info';
+    
+    const Login = async (req_body) => {
+        const request = await fetch('http://localhost:5277/member/getMemberInfo', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -25,17 +28,17 @@ const Login = () => {
         });
 
         let response = await request.json();
-        if (request.status == 200) {
-            callback(response);
+        if (request.status === 200) {
+            return response;
         } else {
-            callback({
+            return {
                 "metadata": {
                     "status": "error",
                     "desc": "登入失敗，請聯絡客服"
                 },
                 "data": {
                 }
-            });
+            };
         }
     };
 
@@ -56,21 +59,22 @@ const Login = () => {
                         .matches(/^.*(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/, "*大小寫英文字母或數字必須皆有")
                         .required("*密碼不能為空")
                 })}
-                onSubmit={(value, { resetForm }) => {
-                    Login({
+                onSubmit={async (value, { resetForm }) => {
+                    const login_response = await Login({
                         "member_account": value.account,
                         "password": value.password
-                    }, (response) => {
-                        console.log(response);
-                        if(response.metadata.status === 'success') 
-                            navigate('/account');
-
-                        document.getElementsByClassName('login-message')[0].innerHTML = response.metadata.desc;
-                        document.getElementsByClassName('login-message')[0].classList.remove("hidden");
-                        document.getElementsByClassName('login-message')[0].classList.add("active");
-
-                        resetForm();
                     });
+
+                    if (login_response.metadata.status === 'success') {
+                        setAuthToken(login_token, JSON.stringify(login_response.data));
+                        navigate('/account');
+                    }
+
+                    document.getElementsByClassName('login-message')[0].innerHTML = login_response.metadata.desc;
+                    document.getElementsByClassName('login-message')[0].classList.remove("hidden");
+                    document.getElementsByClassName('login-message')[0].classList.add("active");
+
+                    resetForm();
                 }}
             >
                 {({errors, touched}) => (
