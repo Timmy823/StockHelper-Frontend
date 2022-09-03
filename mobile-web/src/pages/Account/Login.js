@@ -66,8 +66,16 @@ const Login = () => {
                     });
 
                     if (login_response.metadata.status === 'success') {
-                        setAuthToken(login_token, JSON.stringify(login_response.data));
-                        navigate('/account');
+                        const promise = new Promise((resolve)=>{
+                            setAuthToken(login_token, JSON.stringify(login_response.data));
+                            resolve();
+                        });
+                        promise.then(()=>{
+                            navigate('/account');
+                        });
+                        promise.catch((error)=>{
+                            console.log(error);
+                        });
                     }
 
                     document.getElementsByClassName('login-message')[0].innerHTML = login_response.metadata.desc;
