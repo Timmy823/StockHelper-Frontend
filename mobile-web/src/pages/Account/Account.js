@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MDBCollapse, MDBBtn, MDBRow, MDBCol} from 'mdb-react-ui-kit';
 import { deleteAuthToken, getAuthToken } from '../../utils/TokenUtils';
@@ -8,7 +8,7 @@ import './Account.css';
 const Account = () => {
     const navigate = useNavigate();
     const login_token = 'account_info';
-    const account_infomation = useRef({});
+    const [accountInfomation, setAccountInfomation] = useState({});
     const [showAccountInfo, setShowAccountInfo] = useState(false);
     const [showRemider, setShowRemider] = useState(false);
     const [showManul, setShowManual] = useState(false);
@@ -20,8 +20,8 @@ const Account = () => {
     useEffect(()=>{
         if (getAuthToken(login_token) === null)
             navigate('/login');
-        account_infomation.current = JSON.parse(getAuthToken(login_token));
-    });
+        setAccountInfomation(JSON.parse(getAuthToken(login_token)));
+    }, [accountInfomation]);
 
     return (
         <>
@@ -30,12 +30,12 @@ const Account = () => {
             <MDBCollapse show={showAccountInfo} className='my-1 mx-2'>
                 <MDBRow className='my-2'>
                     <MDBCol className='row-auto col-auto me-auto'>名稱：</MDBCol>
-                    <MDBCol className='row-auto col-auto'> {account_infomation.current.name}</MDBCol>
+                    <MDBCol className='row-auto col-auto'> {accountInfomation.name}</MDBCol>
                     <MDBBtn className='col-auto px-3 py-0' color='link' data-mdb-ripple-color='dark'> 變更</MDBBtn>
                 </MDBRow>
                 <MDBRow className='my-2'>
                     <MDBCol className='col-auto me-auto'>電子信箱：</MDBCol>
-                    <MDBCol className='col-auto'> {account_infomation.current.member_account}</MDBCol>
+                    <MDBCol className='col-auto'> {accountInfomation.member_account}</MDBCol>
                     <MDBBtn className='col-auto px-3 py-0' color='link' data-mdb-ripple-color='dark'> 變更</MDBBtn>
                 </MDBRow>
                 <MDBRow className='my-2'>
@@ -44,7 +44,7 @@ const Account = () => {
                 </MDBRow>
                 <MDBRow className='my-2'>
                     <MDBCol className='col-auto me-auto'>聯絡電話：</MDBCol>
-                    <MDBCol className='col-auto'> {account_infomation.current.telephone}</MDBCol>
+                    <MDBCol className='col-auto'> {accountInfomation.telephone}</MDBCol>
                     <MDBBtn className='col-auto px-3 py-0' color='link' data-mdb-ripple-color='dark'> 變更</MDBBtn>
                 </MDBRow>
             </MDBCollapse>
