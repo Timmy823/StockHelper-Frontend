@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MDBCollapse, MDBBtn, MDBRow, MDBCol} from 'mdb-react-ui-kit';
+import { deleteAuthToken } from '../../utils/TokenUtils';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './Account.css';
 
 const Account = () => {
+    const navigate = useNavigate();
+    const login_token = 'account_info';
     const [showAccountInfo, setShowAccountInfo] = useState(false);
     const [showRemider, setShowRemider] = useState(false);
     const [showManul, setShowManual] = useState(false);
@@ -39,15 +43,24 @@ const Account = () => {
             </MDBCollapse>
 
             <MDBBtn className='btn-dark w-100' onClick={toggleRemider}> 報價提醒</MDBBtn>
-
-
             <MDBBtn className='btn-dark w-100' onClick={toggleManual}> 使用教學</MDBBtn>
             <MDBCollapse show={showManul} className='mt-1'>
                 Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil
                 anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
             </MDBCollapse>
 
-            <MDBBtn className='btn-dark w-100' href='/login'> 登出</MDBBtn>
+            <MDBBtn className='btn-dark w-100' onClick={() => {
+                const promise = new Promise((resolve)=>{
+                    deleteAuthToken(login_token);
+                    resolve();
+                });
+                promise.then(()=>{
+                    navigate('/login');
+                });
+                promise.catch((error)=>{
+                    console.log(error);
+                });
+            }}> 登出</MDBBtn>
         </>
     );
 }
