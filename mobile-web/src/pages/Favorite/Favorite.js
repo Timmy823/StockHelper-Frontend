@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { resolvePath, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAuthToken } from '../../utils/TokenUtils';
 import ListInstantStock from "../../components/Card/ListInstantStock";
 import "./Favorite.css";
@@ -18,7 +18,6 @@ const Favorite = () => {
             }
         ]
     }]);
-    const FavoriteListRef = useRef(FavoriteList);
 
     const [ButtonIndex, setButtonIndex] = useState(0);
     
@@ -53,10 +52,6 @@ const Favorite = () => {
             setFavoriteList(response.data);
         })
     },[]);
-
-    useEffect(()=>{
-        FavoriteListRef.current = FavoriteList;
-    });
 
     return (
         <div>
