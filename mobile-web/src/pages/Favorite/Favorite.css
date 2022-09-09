@@ -2,8 +2,9 @@
     margin: 10px 5px 70px 5px;
 }
 
-.option-button-list {
+.navbar.option-button-list {
     display: -webkit-inline-box;
+    flex-wrap: unset;
     overflow: scroll;
 }
 
@@ -13,7 +14,7 @@
     color: white;
 }
 .favorite-page .option-button-list .selected {
-    background-color: blue;
+    border-bottom: solid orange 3px
 }
 
 hr {

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuthToken } from '../../utils/TokenUtils';
 import ListInstantStock from "../../components/Card/ListInstantStock";
 import "./Favorite.css";
+import { MDBNavbar, MDBNavbarBrand, MDBNavbarItem, MDBNavbarNav, MDBNavbarToggler } from 'mdb-react-ui-kit';
 
 const Favorite = () => {
     const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Favorite = () => {
     }]);
 
     const [ButtonIndex, setButtonIndex] = useState(0);
+    let initialClass = 0;
     
     const getFavoriteListInfo = async (account) => {
         const req_url = "http://localhost:5277/member/getFavoriteList" + "?member_account=" + account;
@@ -56,18 +58,23 @@ const Favorite = () => {
     return (
         <div>
             <div className='favorite-page'>
-                <div className='option-button-list'>
-                    {FavoriteList.map((list, index) => { 
-                        console.log(index);
-                        return <li className='option-button'
+                <MDBNavbar className='option-button-list'>
+                    {FavoriteList.map((list, index) => {
+                        initialClass = (index == 0) ? 'option-button selected': 'option-button';
+                        return <MDBNavbarItem className={initialClass}
                             key={index}
                             id={index}
                             onClick={(e)=> {
                                 setButtonIndex(e.target.id);
+                                FavoriteList.map((list, index) => {
+                                    if (document.getElementsByClassName('option-button')[index].classList.contains("selected"))
+                                        document.getElementsByClassName('option-button')[index].classList.remove("selected");
+                                })
+                                document.getElementsByClassName('option-button')[e.target.id].classList.add("selected");
                             }}
-                        >{list.list_name}</li>;
+                        >{list.list_name}</MDBNavbarItem>;
                     })}
-                </div>
+                </MDBNavbar>
                 <div className='stock-list'>
                     {FavoriteList[ButtonIndex]['stock_list'].map((stock, index) => {
                         if (stock.stock_id == '0000') 
