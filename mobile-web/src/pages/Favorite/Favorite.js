@@ -8,7 +8,16 @@ const Favorite = () => {
     const navigate = useNavigate();
     const login_token = 'account_info';
     
-    const [FavoriteList, setFavoriteList] = useState([]);
+    const [FavoriteList, setFavoriteList] = useState([{
+        "list_name": "",
+        "stock_list": [
+            {
+                "stock_id": "0000",
+                "stock_name": "",
+                "comment": ""
+            }
+        ]
+    }]);
     const FavoriteListRef = useRef(FavoriteList);
 
     const [ButtonIndex, setButtonIndex] = useState(0);
@@ -65,6 +74,11 @@ const Favorite = () => {
                     })}
                 </div>
                 <div className='stock-list'>
+                    {FavoriteList[ButtonIndex]['stock_list'].map((stock, index) => {
+                        if (stock.stock_id == '0000') 
+                            return;
+                        return <><ListInstantStock className={'stockid_' + stock.stock_id} key={index}/><hr/></>;
+                    })}
                 </div>
             </div>
         </div>
