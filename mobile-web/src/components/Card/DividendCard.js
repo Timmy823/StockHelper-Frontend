@@ -5,9 +5,9 @@ import BarChart from "../Chart/BarChart";
 const DividendCard = (props) => {
     const setting = {}
     useEffect(() => {
-        let root = document.querySelector(`.${props.className} .chart`);
+        let root = document.querySelector('.dividend_card .chart');
         BarChart(root, props.data, setting);
-    })
+    }, [])
 
     return (
         <div className='dividend_card'>
