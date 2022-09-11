@@ -19,7 +19,7 @@ import * as d3 from "d3";
 //     }
 // }
 function BarChart(root, BarData, setting){
-    const margin = { top: 0, right: 15, bottom: 20, left: 20},
+    const margin = { top: 0, right: 0, bottom: 20, left: 20},
         width = root.clientWidth - margin.left - margin.right,
         height = root.clientHeight - margin.top - margin.bottom;
     
@@ -33,7 +33,7 @@ function BarChart(root, BarData, setting){
     const svg = d3.select(root)
         .append('svg')
         .attr('width', width)
-        .attr('height', height)
+        .attr('height', root.clientHeight)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 

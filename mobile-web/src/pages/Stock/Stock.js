@@ -7,13 +7,23 @@ from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
+import { Math } from 'es6-shim';
 
 const Stock = () => {
     const [showItems, setShowItems] = useState({
         dividend: false,
         company_profile: false
     });
-    const [dividendInfo, setDividendInfo] = useState();
+    const [dividendInfo, setDividendInfo] = useState([]);
+    useEffect(()=>{
+        if(dividendInfo.length !== 0) {
+            console.log(dividendInfo);
+            setShowItems(prevState => ({
+                ...prevState,
+                dividend: true,
+            }));
+        }
+    }, [dividendInfo]);
 
     const accessAPI = async (method, req_url, req_data, error_message) => {
         if (method === 'GET') {
@@ -39,13 +49,31 @@ const Stock = () => {
                     "status": "error",
                     "desc": error_message
                 },
-                "data": {
-                }
+                "data": {}
             };
         }
     };
 
-    const getDividendInfo = (stock_id, callback) => {
+    const getDividendOverviewInfo = (result) => {
+        let makeup = 0.0, makeup_day = 0.0, decade_cash_dividend = 0.0;
+        console.log(result);
+        result.forEach((element, index) => {
+            if (!isNaN(element['make_up_dividend_days']) && Number(element['make_up_dividend_days']) <= 365) {
+                makeup += 1;
+                makeup_day += Number(element['make_up_dividend_days']);
+            }
+            if (index < 10 && !isNaN(element['value']))
+                decade_cash_dividend += Number(element['value']);
+        });
+
+        return {
+            'makeup_probability': (makeup*100/result.length).toFixed(2), 
+            'makeup_avg_day': (makeup_day/result.length).toFixed(2), 
+            'decade_avg_cash_dividend': (decade_cash_dividend/10).toFixed(2)
+        };
+    };
+
+    const getDividendInfo = (stock_id) => {
         const req_data = {
             'stock_id': stock_id
         };
@@ -55,16 +83,26 @@ const Stock = () => {
                 let result = respone['data']['stockdata'].map((data)=>{
                     return {
                         time: data['dividend_period'],
-                        value: data['cash_dividend(dollors)']
+                        value: data['cash_dividend(dollors)'],
+                        make_up_dividend_days: data['make_up_dividend_days']
                     };
                 });
-                console.log(result);
 
-                return result;
-            })
-            .then((result)=>{
-                setDividendInfo([{},{}]);
-                callback();
+                result = result.filter((element)=>{
+                    return Number(element['time']) >= 2007;
+                });
+
+                const dividendOverviewInfo = getDividendOverviewInfo(result);
+                result = result.sort(function (a, b) {
+                    return a.time > b.time ? 1 : -1;
+                });
+
+                console.log(dividendOverviewInfo);
+
+                setDividendInfo([{
+                    'overview': dividendOverviewInfo,
+                    'data' : result
+                }]);
             });
     };
 
@@ -76,26 +114,22 @@ const Stock = () => {
     };
 
     return (
-        <MDBContainer className='stock_mainpage'>
+        <MDBContainer className='mt-3 stock_mainpage'>
             <div className='quote'>
-                <h3> 中興電</h3>
-                <h4> 1513 </h4>
+                <h5> 中興電</h5>
+                <h6> 1513 </h6>
             </div>
-            <div className='menu'>
+            <div className='mb-3 menu'>
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
-                    getDividendInfo('1513', ()=>{
-                        console.log(dividendInfo);
-                        let newItems = showItems;
-                        newItems['dividend'] = true;
-                        setShowItems(newItems);
-                        console.log(showItems);
-                    })
+                    getDividendInfo('1513');
                 }}>股利政策</MDBBtn>
                 <MDBBtn className='mx-2 px-3 stock-menu-button'>公司基本資訊</MDBBtn>
             </div>
-            <div className='content'>
+            <div className='mb-3 content'>
                 <div className={'sub-content ' + (showItems['dividend'] ? '' : 'hidden')}>
-                    {/* <DividendCard data={dividendInfo}/> */}
+                    {
+                        showItems['dividend'] ? <DividendCard input_data={dividendInfo}/> : <p></p>
+                    }
                 </div>
                 <div className={'sub-content ' + (showItems['company_profile'] ? '' : 'hidden')}>
                     <h2>公司基本資料</h2>
