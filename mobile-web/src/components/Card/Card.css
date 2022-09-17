@@ -11,7 +11,8 @@
    margin-right: 4px;
    color: white;
 }
-.dividend_card .chart{
+.dividend_card .chart,
+.eps_card .chart{
     width: 100%;
     height: 100px;
 }

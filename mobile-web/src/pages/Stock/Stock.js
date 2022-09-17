@@ -8,14 +8,17 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
 import CompanyProfile from '../../components/Card/CompanyProfile';
+import EPSCard from '../../components/Card/EPSCard';
 
 const Stock = () => {
     const [showItems, setShowItems] = useState({
         dividend: false,
-        company_profile: false
+        company_profile: false,
+        eps: false,
     });
     const [dividendInfo, setDividendInfo] = useState([]);
     const [companyProfile, setCompanyProfile] = useState({});
+    const [epsInfo, setEpsInfo] = useState([]);
 
     useEffect(()=>{
         if(dividendInfo.length !== 0) {
@@ -34,6 +37,15 @@ const Stock = () => {
             }));
         }
     }, [companyProfile]);
+
+    useEffect(()=>{
+        if(epsInfo.length !== 0) {
+            setShowItems(prevState => ({
+                ...prevState,
+                eps: true,
+            }));
+        }
+    }, [epsInfo]);
 
     const accessAPI = async (method, req_url, req_data, error_message) => {
         if (method === 'GET') {
@@ -148,6 +160,30 @@ const Stock = () => {
             });
     };
 
+    const getEps = (stock_id) => {
+        const req_data = {
+            'stock_id': stock_id
+        };
+
+        accessAPI('GET', 'http://localhost:5277/twse/getStockEps', req_data, '無法取得公司EPS')
+            .then((response)=>{
+                let result = response['data'].map((data)=>{
+                    return {
+                        time: data['year'] + data['season'],
+                        value: data['eps']
+                    };
+                });
+
+                result = result.sort(function (a, b) {
+                    return a.time > b.time ? 1 : -1;
+                });
+
+                setEpsInfo([{
+                    'data' : result
+                }]);
+            });
+    };
+
     return (
         <MDBContainer className='mt-3 stock_mainpage'>
             <div className='quote'>
@@ -161,6 +197,9 @@ const Stock = () => {
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
                     getCompanyProfile('1513');
                 }}>公司基本資訊</MDBBtn>
+                <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
+                    getEps('1513');
+                }}>eps</MDBBtn>
             </div>
             <div className='mb-3 content'>
                 <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : ' hidden')}>
@@ -171,6 +210,11 @@ const Stock = () => {
                 <div className={'sub-content mb-2' + (showItems['company_profile'] ? '' : ' hidden')}>
                     {
                         showItems['company_profile'] ? <CompanyProfile input_data={companyProfile}/> : <p></p>
+                    }
+                </div>
+                <div className={'sub-content mb-2' + (showItems['eps'] ? '' : ' hidden')}>
+                    {
+                        showItems['eps'] ? <EPSCard input_data={epsInfo}/> : <p></p>
                     }
                 </div>
             </div>
