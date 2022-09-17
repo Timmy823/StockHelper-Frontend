@@ -1,0 +1,33 @@
+.dividend_card,
+.company_profile_card,
+.eps_card,
+.revenue_card {
+    border: 1px solid orange;
+    padding: 2px;
+}
+.dividend_card .overview {
+    display: inline-flex;
+}
+.dividend_card .overview p{
+   font-size: 4px;
+   margin-right: 4px;
+   color: white;
+}
+.dividend_card .chart,
+.eps_card .chart,
+.revenue_card .chart{
+    width: 100%;
+    height: 100px;
+}
+
+.company_profile_card {
+    height: 200px;
+    padding: 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.company_profile_card p {
+    font-size: 10px;
+    color: white;
+}

@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../Home/Home";
 import Favorite from "../Favorite/Favorite";
+import Stock from "../Stock/Stock";
 
 import StockSearch from "../../components/Search/StockSearch";
 import Bottombar from "../../components/Tabbar/Bottombar";
@@ -44,6 +45,11 @@ const Main = () => {
             <Route path='/reset_password' element={<>
                 <ResetPassword />
                 <Bottombar index={2}/>
+            </>} />
+
+            <Route path='/stock' element={<>
+                <StockSearch />
+                <Stock />
             </>} />
         </Routes>
     );
