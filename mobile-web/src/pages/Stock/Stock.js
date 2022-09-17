@@ -9,16 +9,19 @@ import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
 import CompanyProfile from '../../components/Card/CompanyProfile';
 import EPSCard from '../../components/Card/EPSCard';
+import RevenueCard from '../../components/Card/Revenue';
 
 const Stock = () => {
     const [showItems, setShowItems] = useState({
         dividend: false,
         company_profile: false,
         eps: false,
+        revenue: false,
     });
     const [dividendInfo, setDividendInfo] = useState([]);
     const [companyProfile, setCompanyProfile] = useState({});
     const [epsInfo, setEpsInfo] = useState([]);
+    const [revenueInfo, setRevenueInfo] = useState([]);
 
     useEffect(()=>{
         if(dividendInfo.length !== 0) {
@@ -46,6 +49,15 @@ const Stock = () => {
             }));
         }
     }, [epsInfo]);
+
+    useEffect(()=>{
+        if(revenueInfo.length !== 0) {
+            setShowItems(prevState => ({
+                ...prevState,
+                revenue: true,
+            }));
+        }
+    }, [revenueInfo]);
 
     const accessAPI = async (method, req_url, req_data, error_message) => {
         if (method === 'GET') {
@@ -184,6 +196,33 @@ const Stock = () => {
             });
     };
 
+    const getMonthlyRevenue = (stock_id) => {
+        const req_data = {
+            'stock_id': stock_id
+        };
+
+        accessAPI('GET', 'http://localhost:5277/twse/getCompanyMonthlyRevenue', req_data, '無法取得公司營收')
+            .then((response)=>{
+                let result = response['data'].map((data)=>{
+                    let time = data['year'] + '/' + data['month'];
+                    return {
+                        time: time,
+                        value: (data['revenue'] / 1000000000).toFixed(2)
+                    };
+                });
+
+                result = result.sort(function (a, b) {
+                    return a.time > b.time ? 1 : -1;
+                });
+
+                console.log(result);
+
+                setRevenueInfo([{
+                    'data' : result
+                }]);
+            });
+    };
+
     return (
         <MDBContainer className='mt-3 stock_mainpage'>
             <div className='quote'>
@@ -200,6 +239,9 @@ const Stock = () => {
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
                     getEps('1513');
                 }}>eps</MDBBtn>
+                <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
+                    getMonthlyRevenue('1513');
+                }}>營收</MDBBtn>
             </div>
             <div className='mb-3 content'>
                 <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : ' hidden')}>
@@ -215,6 +257,11 @@ const Stock = () => {
                 <div className={'sub-content mb-2' + (showItems['eps'] ? '' : ' hidden')}>
                     {
                         showItems['eps'] ? <EPSCard input_data={epsInfo}/> : <p></p>
+                    }
+                </div>
+                <div className={'sub-content mb-2' + (showItems['revenue'] ? '' : ' hidden')}>
+                    {
+                        showItems['revenue'] ? <RevenueCard input_data={revenueInfo}/> : <p></p>
                     }
                 </div>
             </div>
