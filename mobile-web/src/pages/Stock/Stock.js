@@ -7,7 +7,6 @@ from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
-import { Math } from 'es6-shim';
 
 const Stock = () => {
     const [showItems, setShowItems] = useState({
@@ -17,7 +16,6 @@ const Stock = () => {
     const [dividendInfo, setDividendInfo] = useState([]);
     useEffect(()=>{
         if(dividendInfo.length !== 0) {
-            console.log(dividendInfo);
             setShowItems(prevState => ({
                 ...prevState,
                 dividend: true,
@@ -56,7 +54,6 @@ const Stock = () => {
 
     const getDividendOverviewInfo = (result) => {
         let makeup = 0.0, makeup_day = 0.0, decade_cash_dividend = 0.0;
-        console.log(result);
         result.forEach((element, index) => {
             if (!isNaN(element['make_up_dividend_days']) && Number(element['make_up_dividend_days']) <= 365) {
                 makeup += 1;
@@ -80,7 +77,7 @@ const Stock = () => {
 
         accessAPI('GET', 'http://localhost:5277/twse/getCompanyDividendPolicy', req_data, '無法取得股利政策')
             .then((respone)=>{
-                let result = respone['data']['stockdata'].map((data)=>{
+                let result = respone['data'].map((data)=>{
                     return {
                         time: data['dividend_period'],
                         value: data['cash_dividend(dollors)'],
@@ -96,8 +93,6 @@ const Stock = () => {
                 result = result.sort(function (a, b) {
                     return a.time > b.time ? 1 : -1;
                 });
-
-                console.log(dividendOverviewInfo);
 
                 setDividendInfo([{
                     'overview': dividendOverviewInfo,
@@ -126,13 +121,12 @@ const Stock = () => {
                 <MDBBtn className='mx-2 px-3 stock-menu-button'>公司基本資訊</MDBBtn>
             </div>
             <div className='mb-3 content'>
-                <div className={'sub-content ' + (showItems['dividend'] ? '' : 'hidden')}>
+                <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : 'hidden')}>
                     {
                         showItems['dividend'] ? <DividendCard input_data={dividendInfo}/> : <p></p>
                     }
                 </div>
-                <div className={'sub-content ' + (showItems['company_profile'] ? '' : 'hidden')}>
-                    <h2>公司基本資料</h2>
+                <div className={'sub-content mb-2' + (showItems['company_profile'] ? '' : 'hidden')}>
                 </div>
             </div>
         </MDBContainer>
