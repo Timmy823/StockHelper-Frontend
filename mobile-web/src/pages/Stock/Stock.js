@@ -7,6 +7,7 @@ from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
+import CompanyProfile from '../../components/Card/CompanyProfile';
 
 const Stock = () => {
     const [showItems, setShowItems] = useState({
@@ -14,6 +15,8 @@ const Stock = () => {
         company_profile: false
     });
     const [dividendInfo, setDividendInfo] = useState([]);
+    const [companyProfile, setCompanyProfile] = useState({});
+
     useEffect(()=>{
         if(dividendInfo.length !== 0) {
             setShowItems(prevState => ({
@@ -22,6 +25,15 @@ const Stock = () => {
             }));
         }
     }, [dividendInfo]);
+
+    useEffect(()=>{
+        if(Object.keys(companyProfile).length !== 0) {
+            setShowItems(prevState => ({
+                ...prevState,
+                company_profile: true,
+            }));
+        }
+    }, [companyProfile]);
 
     const accessAPI = async (method, req_url, req_data, error_message) => {
         if (method === 'GET') {
@@ -76,8 +88,8 @@ const Stock = () => {
         };
 
         accessAPI('GET', 'http://localhost:5277/twse/getCompanyDividendPolicy', req_data, '無法取得股利政策')
-            .then((respone)=>{
-                let result = respone['data'].map((data)=>{
+            .then((response)=>{
+                let result = response['data'].map((data)=>{
                     return {
                         time: data['dividend_period'],
                         value: data['cash_dividend(dollors)'],
@@ -90,6 +102,7 @@ const Stock = () => {
                 });
 
                 const dividendOverviewInfo = getDividendOverviewInfo(result);
+
                 result = result.sort(function (a, b) {
                     return a.time > b.time ? 1 : -1;
                 });
@@ -105,7 +118,34 @@ const Stock = () => {
         const req_data = {
             'stock_id': stock_id
         };
-        accessAPI('GET', 'http://localhost:5277/member/getCompanyProfile', req_data, '無法取得公司基本資料');
+
+        accessAPI('GET', 'http://localhost:5277/twse/getCompanyProfile', req_data, '無法取得公司基本資料')
+            .then((response)=>{
+                console.log(response);
+                let result = {
+                    'overview':{
+                        'chairman': response['data']['chairman'],
+                        'president': response['data']['president'],
+                        'created_date': response['data']['created_date'],
+                        'stock_date': response['data']['stock_date'],
+                    },
+                    'contact':{
+                        'website': response['data']['website'],
+                        'address': response['data']['address'],
+                        'email': response['data']['email'],
+                        'telephone': response['data']['telephone'],
+                        'fax': response['data']['fax'],
+                    },
+                    'main_business': response['data']['main_business'],
+                    'market': {
+                        'share_capital': response['data']['share_capital'],
+                        'market_value': response['data']['market_value'],
+                        'share_holding_radio': response['data']['share_holding_radio'],
+                    },
+                };
+
+                setCompanyProfile(result);
+            });
     };
 
     return (
@@ -118,15 +158,20 @@ const Stock = () => {
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
                     getDividendInfo('1513');
                 }}>股利政策</MDBBtn>
-                <MDBBtn className='mx-2 px-3 stock-menu-button'>公司基本資訊</MDBBtn>
+                <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
+                    getCompanyProfile('1513');
+                }}>公司基本資訊</MDBBtn>
             </div>
             <div className='mb-3 content'>
-                <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : 'hidden')}>
+                <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : ' hidden')}>
                     {
                         showItems['dividend'] ? <DividendCard input_data={dividendInfo}/> : <p></p>
                     }
                 </div>
-                <div className={'sub-content mb-2' + (showItems['company_profile'] ? '' : 'hidden')}>
+                <div className={'sub-content mb-2' + (showItems['company_profile'] ? '' : ' hidden')}>
+                    {
+                        showItems['company_profile'] ? <CompanyProfile input_data={companyProfile}/> : <p></p>
+                    }
                 </div>
             </div>
         </MDBContainer>

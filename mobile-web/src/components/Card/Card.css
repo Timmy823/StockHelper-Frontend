@@ -1,4 +1,5 @@
-.dividend_card {
+.dividend_card,
+.company_profile_card {
     border: 1px solid orange;
     padding: 2px;
 }
@@ -13,4 +14,16 @@
 .dividend_card .chart{
     width: 100%;
     height: 100px;
+}
+
+.company_profile_card {
+    height: 200px;
+    padding: 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.company_profile_card p {
+    font-size: 10px;
+    color: white;
 }
