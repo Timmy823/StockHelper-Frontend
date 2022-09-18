@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 import {
     MDBContainer,
     MDBBtn
@@ -12,6 +14,18 @@ import EPSCard from '../../components/Card/EPSCard';
 import RevenueCard from '../../components/Card/Revenue';
 
 const Stock = () => {
+    const secretKey = "0123456789ASDFGH";
+    const IV = CryptoJS.enc.Utf8.parse("1122334455");
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const decrypt = (data) => {
+        return JSON.parse(CryptoJS.AES.decrypt(
+            CryptoJS.enc.Base64.stringify(CryptoJS.enc.Hex.parse(data)),
+            CryptoJS.enc.Utf8.parse(secretKey),
+            {iv: IV, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding}
+        ).toString(CryptoJS.enc.Utf8));
+    };
+
     const [showItems, setShowItems] = useState({
         dividend: false,
         company_profile: false,
@@ -225,9 +239,9 @@ const Stock = () => {
 
     return (
         <MDBContainer className='mt-3 stock_mainpage'>
-            <div className='quote'>
-                <h5> 中興電</h5>
-                <h6> 1513 </h6>
+            <div className='overview'>
+                <h5 className='mb-1'> {decrypt(searchParams.get("id"))['stock_name']} </h5>
+                <p className='mb-1'> {decrypt(searchParams.get("id"))['stock_id']}  {decrypt(searchParams.get("id"))['stock_type']}/{decrypt(searchParams.get("id"))['industry_type']}</p>
             </div>
             <div className='mb-3 menu'>
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
