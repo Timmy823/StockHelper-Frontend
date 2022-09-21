@@ -51,30 +51,35 @@ const StockSearch = () => {
     },[])
     
     return (
-        <SelectSearch
-            options={options}
-            value={value}
-            onChange={(e)=>{
-                navigate('/stock?id=' + e);
-            }}
-            search
-            emptyMessage="Not found"
-            placeholder="2330"
-            filterOptions={(options) => {
-                const fuse = new Fuse(options, {
-                    keys: ["name","value"],
-                    threshold: 0.3
-                });
-              
-                return (value) => {
-                    if (!value.length) {
-                        return options;
-                    }
+        <div className='stock-search py-2'>
+            <div className=''>
+              首頁
+            </div>
+            <SelectSearch
+              options={options}
+              value={value}
+              onChange={(e)=>{
+                  navigate('/stock?id=' + e);
+              }}
+              search
+              emptyMessage="Not found"
+              placeholder="2330"
+              filterOptions={(options) => {
+                  const fuse = new Fuse(options, {
+                      keys: ["name","value"],
+                      threshold: 0.3
+                  });
+                
+                  return (value) => {
+                      if (!value.length) {
+                          return options;
+                      }
 
-                    return fuse.search(value).map((result) => result.item);
-                };
-            }}
-        />
+                      return fuse.search(value).map((result) => result.item);
+                  };
+              }} />
+        </div>
+        
     );
 }
 export default StockSearch
