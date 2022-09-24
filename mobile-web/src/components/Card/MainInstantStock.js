@@ -58,7 +58,6 @@ const MainInstantStock = (props) => {
                 stock_name: target.firstChild.textContent,
                 stock_id: stock_id,
                 stock_type: stock_type,
-                industry_type: target.lastChild.textContent
             };
 
             const stock_info_encrypt = CryptoJS.AES.encrypt(
@@ -73,7 +72,6 @@ const MainInstantStock = (props) => {
                 <div>
                     <h6> {props.input_data['stock_name']} </h6>
                     <p> {props.input_data['stock_id']} {props.input_data['stock_type']} </p>
-                    <p style={{display:'none'}}> {props.input_data['industry_type']} </p>
                 </div>
                 <div>
                     <h5> {props.input_data['stock_value']} </h5>

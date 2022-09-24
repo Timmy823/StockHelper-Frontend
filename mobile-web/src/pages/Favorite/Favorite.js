@@ -48,7 +48,6 @@ const Favorite = () => {
     };
 
     useEffect(() => {
-        console.log(propTypes);
         if (getAuthToken(login_token) === null)
             navigate('/login');
         getFavoriteListInfo(JSON.parse(getAuthToken(login_token))['member_account'])
@@ -79,14 +78,12 @@ const Favorite = () => {
                 </MDBNavbar>
                 <div className='stock-list'>
                     {FavoriteList[ButtonIndex]['stock_list'].map((stock, index) => {
-                        console.log(stock);
                         if (stock.stock_id == '0000')
                             return;
                         return <><ListInstantStock className={'stockid_' + stock.stock_id} key={index} input_data={{
                             'stock_name': stock.stock_name,
                             'stock_id': stock.stock_id,
                             'stock_type': ' ',
-                            'industry_type': '大盤指數',
                             'stock_value': '203.00',
                             'stock_value_offset': '-1.23%'
                         }} /><hr /></>;
