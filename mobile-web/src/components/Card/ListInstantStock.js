@@ -42,7 +42,7 @@ const ListInstantStock = (props) => {
     useEffect(() => {
         let root = document.querySelector(`.${props.className} .instant-trend`);
         LineChart(root, data, setting);
-    })
+    },[]);
 
     return (
         <div className={ 'list-instant-stock ' + (props.className || '') }>
