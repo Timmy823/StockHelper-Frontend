@@ -171,7 +171,6 @@ const Stock = () => {
 
         accessAPI('GET', 'http://localhost:5277/twse/getCompanyProfile', req_data, '無法取得公司基本資料')
             .then((response)=>{
-                console.log(response);
                 let result = {
                     'overview':{
                         'chairman': response['data']['chairman'],
@@ -241,8 +240,6 @@ const Stock = () => {
                     return a.time > b.time ? 1 : -1;
                 });
 
-                console.log(result);
-
                 setRevenueInfo([{
                     'data' : result
                 }]);
@@ -253,7 +250,7 @@ const Stock = () => {
         <MDBContainer className='mt-3 stock_mainpage'>
             <div className='overview'>
                 <h5 className='mb-1'> {stockTarget['stock_name']} </h5>
-                <p className='mb-1'> {stockTarget['stock_id']}  {stockTarget['stock_type']}/{stockTarget['industry_type']}</p>
+                <p className='mb-1'> {stockTarget['stock_id']}  {stockTarget['stock_type']}</p>
             </div>
             <div className='mb-3 menu'>
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{

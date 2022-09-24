@@ -28,7 +28,6 @@ const StockSearch = () => {
                   stock_name: element['Name'],
                   stock_id: element['ID'],
                   stock_type: type == '1'? '上市' : '上櫃',
-                  industry_type: element['產業別']
               };
 
               return {
