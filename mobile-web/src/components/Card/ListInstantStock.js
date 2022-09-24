@@ -1,8 +1,14 @@
 import React, { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 import LineChart from "../Chart/LineChart";
 import "./ListInstantStock.css";
 
 const ListInstantStock = (props) => {
+    const secretKey = "0123456789ASDFGH";
+    const IV = CryptoJS.enc.Utf8.parse("1122334455");
+    const navigate = useNavigate();
+
     const data = [
         {
             name : 'index',
@@ -45,7 +51,27 @@ const ListInstantStock = (props) => {
     },[]);
 
     return (
-        <div className={ 'list-instant-stock ' + (props.className || '') }>
+        <div className={ 'list-instant-stock ' + (props.className || '') } onClick={(e)=>{
+            const target = e.currentTarget.firstChild;
+            const [stock_id, stock_type] = target.children[1].textContent.trim().split(' ');
+
+            const stock_info = {
+                stock_name: target.firstChild.textContent,
+                stock_id: stock_id,
+                stock_type: stock_type,
+                industry_type: target.lastChild.textContent
+            };
+
+            const stock_info_encrypt = CryptoJS.AES.encrypt(
+                JSON.stringify(stock_info),
+                CryptoJS.enc.Utf8.parse(secretKey),
+                {iv: IV, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding}
+            ).ciphertext.toString(CryptoJS.enc.Hex)
+
+            console.log(stock_info);
+
+            navigate('/stock?id=' + stock_info_encrypt);
+        }}>
             <div className='stock-info'>
                 <h6> {props.input_data['stock_name']} </h6>
                 <p> {props.input_data['stock_id']} {props.input_data['stock_type']} </p>
