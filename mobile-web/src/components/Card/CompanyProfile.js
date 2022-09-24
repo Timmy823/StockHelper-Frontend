@@ -4,7 +4,7 @@ import './Card.css'
 const CompanyProfile = (props) => {
     return (
         <div className='company_profile_card'>
-            <h6 className='mt-1 mb-3'> 公司基本資訊 </h6>
+            <h6 className='mt-1 mb-3 ms-3'> 公司基本資訊 </h6>
             <div className='row'>
                 <div className='col-3 col-xl-2 mb-2'>
                     <p className='mb-0 text-400'>董事長</p>

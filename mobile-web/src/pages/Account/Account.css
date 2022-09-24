@@ -19,11 +19,9 @@ input[name="password_confirm"] {
 .error-message.hidden,
 .register-message.hidden,
 .login-message.hidden {
-    color: var(--mdb-body-bg);
+    color: initial;
 }
 
 .register-container .text-center p{
     margin: 0;
 }
-
-
