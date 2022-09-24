@@ -4,7 +4,8 @@
     width: 48%;
     margin: 3px;
     padding: 5px;
-    background-color: #545454;
+    background: repeating-linear-gradient(to right,#FFFFFF,#DCDCDC,#A9A9A9A9);
+    border-radius: 5px;
 }
 .main-instant-stock .stock-info {
     width: 40%;
@@ -15,15 +16,16 @@
     padding: 1px;
 }
 
-h4, h5, h6 {
+.main-instant-stock h5, 
+.main-instant-stock h6 {
     margin: 2px 0px;
-    color: white;
+    color: black;
 }
 
 .main-instant-stock .stock-info p {
     margin: 0;
     font-size: x-small;
-    color: white;
+    color: black;
 }
 .clear {
     clear: both; 

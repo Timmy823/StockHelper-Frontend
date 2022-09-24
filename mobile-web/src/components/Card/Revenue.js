@@ -11,7 +11,7 @@ const RevenueCard = (props) => {
 
     return (
         <div className='revenue_card'>
-            <h6>營收</h6>
+            <h6 className='ms-3 mt-1'>營收</h6>
             <div className='chart' />
         </div>
     )

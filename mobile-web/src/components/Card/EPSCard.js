@@ -13,7 +13,7 @@ const EPSCard = (props) => {
 
     return (
         <div className='eps_card'>
-            <h6>EPS</h6>
+            <h6 className='ms-3 mt-1'>EPS</h6>
             <div className='chart' />
         </div>
     )

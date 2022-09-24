@@ -12,7 +12,7 @@ const DividendCard = (props) => {
 
     return (
         <div className='dividend_card'>
-            <h6>股利政策</h6>
+            <h6 className='ms-3 mt-1'>股利政策</h6>
             <div className='overview'>
                 <p>近15年</p>
                 <p>填息率: {props.input_data[0]['overview']['makeup_probability']}%</p>

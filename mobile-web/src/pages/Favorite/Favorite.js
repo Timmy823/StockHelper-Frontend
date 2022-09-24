@@ -4,7 +4,7 @@ import "./Favorite.css";
 
 const Favorite = () => {
     return (
-        <div>
+        <>
             <div className='favorite-page'>
                 <div className='option-button-list'>
                     <li className='option-button'> 紡織股 </li>
@@ -22,7 +22,7 @@ const Favorite = () => {
                     <ListInstantStock className='stock_2492'/>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 export default Favorite;
