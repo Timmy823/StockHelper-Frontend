@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 import {
     MDBContainer,
     MDBBtn
@@ -12,16 +14,40 @@ import EPSCard from '../../components/Card/EPSCard';
 import RevenueCard from '../../components/Card/Revenue';
 
 const Stock = () => {
+    const secretKey = "0123456789ASDFGH";
+    const IV = CryptoJS.enc.Utf8.parse("1122334455");
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const decrypt = (data) => {
+        return JSON.parse(CryptoJS.AES.decrypt(
+            CryptoJS.enc.Base64.stringify(CryptoJS.enc.Hex.parse(data)),
+            CryptoJS.enc.Utf8.parse(secretKey),
+            {iv: IV, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding}
+        ).toString(CryptoJS.enc.Utf8));
+    };
+
     const [showItems, setShowItems] = useState({
         dividend: false,
         company_profile: false,
         eps: false,
         revenue: false,
     });
+    const [stockTarget, setStockTarget] = useState({});
     const [dividendInfo, setDividendInfo] = useState([]);
     const [companyProfile, setCompanyProfile] = useState({});
     const [epsInfo, setEpsInfo] = useState([]);
     const [revenueInfo, setRevenueInfo] = useState([]);
+
+
+    useEffect(()=>{
+        setStockTarget(decrypt(searchParams.get("id")));
+        setShowItems({
+            dividend: false,
+            company_profile: false,
+            eps: false,
+            revenue: false,
+        });
+    },[searchParams]);
 
     useEffect(()=>{
         if(dividendInfo.length !== 0) {
@@ -225,22 +251,22 @@ const Stock = () => {
 
     return (
         <MDBContainer className='mt-3 stock_mainpage'>
-            <div className='quote'>
-                <h5> 中興電</h5>
-                <h6> 1513 </h6>
+            <div className='overview'>
+                <h5 className='mb-1'> {stockTarget['stock_name']} </h5>
+                <p className='mb-1'> {stockTarget['stock_id']}  {stockTarget['stock_type']}/{stockTarget['industry_type']}</p>
             </div>
             <div className='mb-3 menu'>
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
-                    getDividendInfo('1513');
+                    getDividendInfo(stockTarget['stock_id']);
                 }}>股利政策</MDBBtn>
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
-                    getCompanyProfile('1513');
+                    getCompanyProfile(stockTarget['stock_id']);
                 }}>公司基本資訊</MDBBtn>
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
-                    getEps('1513');
+                    getEps(stockTarget['stock_id']);
                 }}>eps</MDBBtn>
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={()=>{
-                    getMonthlyRevenue('1513');
+                    getMonthlyRevenue(stockTarget['stock_id']);
                 }}>營收</MDBBtn>
             </div>
             <div className='mb-3 content'>

@@ -1,3 +1,7 @@
+.stock-search {
+    display: inline-flex;
+}
+
 .select-search {
     --select-search-background: #fff;
     --select-search-border: #dce0e8;
@@ -19,12 +23,12 @@
     position: relative;
     z-index: 1;
     display: block;
-    height: 48px;
+    height: 35px;
     width: 100%;
     margin: 0 0 0 5px;
     background: var(--select-search-background);
     color: var(--select-search-text);
-    border-radius: 3px;
+    border-radius: 35px;
     outline: none;
     font-family: var(--select-search-font);
     font-size: 16px;
@@ -39,13 +43,13 @@
     position: relative;
     z-index: 1;
     display: block;
-    height: 48px;
+    height: 35px;
     width: 100%;
     padding: 0 6px;
     background: var(--select-search-background);
     border: 2px solid var(--select-search-border);
     color: var(--select-search-text);
-    border-radius: 3px;
+    border-radius: 35px;
     outline: none;
     font-family: var(--select-search-font);
     font-size: 16px;
@@ -72,7 +76,7 @@
 
     position: absolute;
     z-index: 2;
-    top: 58px;
+    top: 35px;
     right: 0;
     left: 0;
     border-radius: 3px;
