@@ -47,12 +47,12 @@ const MainInstantStock = (props) => {
         <div className={ "main-instant-stock " + (props.className || "") }>
             <div className = 'stock-info'>
                 <div>
-                    <h5> 台積電 </h5>
-                    <p> 2330 上市</p>
+                    <h6> {props.input_data['stock_name']} </h6>
+                    <p> {props.input_data['stock_id']} {props.input_data['stock_type']} </p>
                 </div>
                 <div>
-                    <h4> 516.5 </h4>
-                    <p> +1.5% </p>
+                    <h5> {props.input_data['stock_value']} </h5>
+                    <p> {props.input_data['stock_value_offset']} </p>
                 </div>
             </div>
             <div className = 'instant-trend' />
