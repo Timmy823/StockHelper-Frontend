@@ -7,7 +7,8 @@ import {
     MDBBtn
 } from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-import { deleteAuthToken, getAuthToken } from '../../utils/TokenUtils';
+import { Dropdown } from 'react-bootstrap';
+import { getAuthToken } from '../../utils/TokenUtils';
 import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
 import CompanyProfile from '../../components/Card/CompanyProfile';
@@ -30,7 +31,7 @@ const Stock = () => {
         ).toString(CryptoJS.enc.Utf8));
     };
 
-    const [favoriteList, setFavoriteList] = useState([]);
+    const [favoriteList, setFavoriteList] = useState({});
 
     const [showItems, setShowItems] = useState({
         dividend: false,
@@ -152,11 +153,14 @@ const Stock = () => {
 
         accessAPI('GET', 'http://localhost:5277/member/getFavoriteList', req_data, '無法取得會員我的最愛')
             .then((response) => {
-                let result = [];
+                let result = {};
+                let inlist = false;
                 response['data'].map((list) => {
+                    result[list['list_name']] = false;
                     list['stock_list'].map((stock) => {
-                        if(stock['stock_id'] === stockTarget['stock_id']) {
-                            result.push(list['list_name']);
+                        if (stock['stock_id'] === stockTarget['stock_id']) {
+                            result[list['list_name']] = true;
+                            inlist = true;
                             return;
                         }
                     });
@@ -164,7 +168,7 @@ const Stock = () => {
 
                 setFavoriteList(result);
 
-                if (result.length != 0) {
+                if (inlist) {
                     document.getElementsByClassName('add-list')[0].firstChild.innerHTML = '已追蹤';
                     document.getElementsByClassName('add-list')[0].firstChild.classList.remove('btn-light');
                     document.getElementsByClassName('add-list')[0].firstChild.classList.add('btn-success');
@@ -289,15 +293,34 @@ const Stock = () => {
     return (
         <MDBContainer className='mt-3 stock_mainpage'>
             <div className='row'>
+                <Dropdown className="col-4 add-list" autoClose="outside">
+                    <Dropdown.Toggle id="dropdown-autoclose-outside">
+                        +加入追蹤
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        {
+                            Object.keys(favoriteList).map((list_name, index) => {
+                                return (
+                                    <Dropdown.Item as='div' key={index}>
+                                        <input className="form-check-input" type="checkbox" id={'list_' + index} name={list_name} onChange={(e) => {
+                                            setFavoriteList(prevState => ({
+                                                ...prevState,
+                                                [e.target.name]: e.target.checked,
+                                            }));
+                                        }}
+                                            checked={favoriteList[list_name]} />
+                                        <label className="form-check-label" htmlFor={'list_' + index}>{list_name}</label>
+                                    </Dropdown.Item>
+                                );
+                            })
+                        }
+                    </Dropdown.Menu>
+                </Dropdown>
                 <div className='col-8 stock-info'>
                     <h5 className='mb-1'> {stockTarget['stock_name']} </h5>
                     <p className='mb-1'> {stockTarget['stock_id']}  {stockTarget['stock_type']}</p>
                 </div>
-                <div className='col-4 add-list'>
-                    <MDBBtn className='mx-2 px-3 btn-rounded' color='light' onClick={(e) => {
-                    }}>+加入追蹤</MDBBtn>
-                </div>
-
             </div>
             <div className='mb-3 menu'>
                 <MDBBtn className='mx-2 px-3 stock-menu-button' onClick={() => {
