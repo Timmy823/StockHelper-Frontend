@@ -1,27 +1,28 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
 import { setAuthToken } from '../../utils/TokenUtils';
 import {
-  MDBContainer,
-  MDBInput,
-  MDBCheckbox,
-  MDBBtn,
-  MDBIcon
+    MDBContainer,
+    MDBInput,
+    MDBCheckbox,
+    MDBBtn,
+    MDBIcon
 }
-from 'mdb-react-ui-kit';
+    from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import './Account.css';
 
 const Login = () => {
     const navigate = useNavigate();
+    const { state } = useLocation();
     const login_token = 'account_info';
-    
+
     const Login = async (req_body) => {
         const request = await fetch('http://localhost:5277/member/getMemberInfo', {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(req_body)
@@ -47,7 +48,7 @@ const Login = () => {
             <h3>登入</h3>
             <Formik
                 initialValues={{
-                    account: undefined, 
+                    account: undefined,
                     password: undefined
                 }}
                 validationSchema={Yup.object({
@@ -55,7 +56,7 @@ const Login = () => {
                         .email("*請輸入正確格式的信箱")
                         .required("*電子信箱不能為空"),
                     password: Yup.string()
-                        .matches(/^[A-Za-z0-9]{9,16}$/,"*密碼長度為9-16之間的大小寫英文字母或數字")
+                        .matches(/^[A-Za-z0-9]{9,16}$/, "*密碼長度為9-16之間的大小寫英文字母或數字")
                         .matches(/^.*(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/, "*大小寫英文字母或數字必須皆有")
                         .required("*密碼不能為空")
                 })}
@@ -66,14 +67,14 @@ const Login = () => {
                     });
 
                     if (login_response.metadata.status === 'success') {
-                        const promise = new Promise((resolve)=>{
+                        const promise = new Promise((resolve) => {
                             setAuthToken(login_token, JSON.stringify(login_response.data));
                             resolve();
                         });
-                        promise.then(()=>{
-                            navigate('/account');
+                        promise.then(() => {
+                            navigate(state);
                         });
-                        promise.catch((error)=>{
+                        promise.catch((error) => {
                             console.log(error);
                         });
                     }
@@ -85,14 +86,14 @@ const Login = () => {
                     resetForm();
                 }}
             >
-                {({errors, touched}) => (
+                {({ errors, touched }) => (
                     <Form>
-                        <Field as={MDBInput} wrapperClass='mt-1' label='電子郵件' id='form1' name='account'/>
+                        <Field as={MDBInput} wrapperClass='mt-1' label='電子郵件' id='form1' name='account' />
                         {errors.account && touched.account ? (
                             <div className='error-message active'>{errors.account}</div>
                         ) : <div className='error-message hidden'>正確格式</div>}
 
-                        <Field as={MDBInput} wrapperClass='mt-1' label='密碼' id='form2' name='password'/>
+                        <Field as={MDBInput} wrapperClass='mt-1' label='密碼' id='form2' name='password' />
                         {errors.password && touched.password ? (
                             <div className='error-message active'>{errors.password}</div>
                         ) : <div className='error-message hidden'>正確格式</div>}
@@ -111,21 +112,21 @@ const Login = () => {
                 <p>尚未擁有帳號? <a href="/register">註冊</a></p>
                 <p>或 以下列方式登入:</p>
 
-                <div className='d-flex justify-content-between mx-auto' style={{width: '60%'}}>
+                <div className='d-flex justify-content-between mx-auto' style={{ width: '60%' }}>
                     <MDBBtn tag='a' color='none' className='btn btn-primary btn-floating mx-1' style={{ color: '#fff' }}>
-                        <MDBIcon fab icon='facebook-f' size="sm"/>
+                        <MDBIcon fab icon='facebook-f' size="sm" />
                     </MDBBtn>
 
                     <MDBBtn tag='a' color='none' className='btn btn-primary btn-floating mx-1' style={{ color: '#fff' }}>
-                        <MDBIcon fab icon='twitter' size="sm"/>
+                        <MDBIcon fab icon='twitter' size="sm" />
                     </MDBBtn>
 
                     <MDBBtn tag='a' color='none' className='btn btn-primary btn-floating mx-1' style={{ color: '#fff' }}>
-                        <MDBIcon fab icon='google' size="sm"/>
+                        <MDBIcon fab icon='google' size="sm" />
                     </MDBBtn>
 
                     <MDBBtn tag='a' color='none' className='btn btn-primary btn-floating mx-1' style={{ color: '#fff' }}>
-                        <MDBIcon fab icon='github' size="sm"/>
+                        <MDBIcon fab icon='github' size="sm" />
                     </MDBBtn>
                 </div>
             </div>

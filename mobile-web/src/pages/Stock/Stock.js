@@ -360,7 +360,13 @@ const Stock = () => {
         <MDBContainer className='mt-3 stock_mainpage'>
             <div className='row'>
                 <Dropdown className="col-4 add-list" autoClose="outside">
-                    <Dropdown.Toggle id="dropdown-autoclose-outside">
+                    <Dropdown.Toggle id="dropdown-autoclose-outside" onClick={() => {
+                        if (member === "") {
+                            navigate('/login', {
+                                state: '/stock?id=' + searchParams.get("id")
+                            });
+                        }
+                    }}>
                         +加入追蹤
                     </Dropdown.Toggle>
 
@@ -419,16 +425,16 @@ const Stock = () => {
             </div>
             <div className='mb-3 content'>
                 <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : ' hidden')}>
-                    {showItems['dividend']&&<DividendCard input_data={dividendInfo}/>}
+                    {showItems['dividend'] && <DividendCard input_data={dividendInfo} />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['company_profile'] ? '' : ' hidden')}>
-                    {showItems['company_profile']&&<CompanyProfile input_data={companyProfile}/>}
+                    {showItems['company_profile'] && <CompanyProfile input_data={companyProfile} />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['eps'] ? '' : ' hidden')}>
-                    {showItems['eps']&&<EPSCard input_data={epsInfo} />}
+                    {showItems['eps'] && <EPSCard input_data={epsInfo} />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['revenue'] ? '' : ' hidden')}>
-                    {showItems['revenue']&&<RevenueCard input_data={revenueInfo} />}
+                    {showItems['revenue'] && <RevenueCard input_data={revenueInfo} />}
                 </div>
             </div>
         </MDBContainer>
