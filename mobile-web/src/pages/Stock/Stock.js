@@ -31,6 +31,7 @@ const Stock = () => {
         ).toString(CryptoJS.enc.Utf8));
     };
 
+    const [member, setMember] = useState("");
     const [favoriteList, setFavoriteList] = useState({});
 
     const [showItems, setShowItems] = useState({
@@ -59,9 +60,34 @@ const Stock = () => {
     useEffect(() => {
         let member;
         if ((member = getAuthToken(login_token)) != null) {
-            getFavoriteList(JSON.parse(member)["member_account"]);
+            setMember(JSON.parse(member)["member_account"]);
+            getFavoriteListDetail(JSON.parse(member)["member_account"]);
         }
     }, [stockTarget]);
+
+    useEffect(() => {
+        let all_false = Object.values(favoriteList).every(v => v === false);
+        if (all_false) {
+            document.getElementsByClassName('add-list')[0].firstChild.innerHTML = '+加入追蹤';
+            document.getElementsByClassName('add-list')[0].firstChild.classList.add('btn-light');
+            document.getElementsByClassName('add-list')[0].firstChild.classList.remove('btn-success');
+        }
+
+        if (!all_false) {
+            document.getElementsByClassName('add-list')[0].firstChild.innerHTML = '已追蹤';
+            document.getElementsByClassName('add-list')[0].firstChild.classList.remove('btn-light');
+            document.getElementsByClassName('add-list')[0].firstChild.classList.add('btn-success');
+        }
+    }, [favoriteList]);
+
+    useEffect(() => {
+        if (dividendInfo.length !== 0) {
+            setShowItems(prevState => ({
+                ...prevState,
+                dividend: true,
+            }));
+        }
+    }, [dividendInfo]);
 
     useEffect(() => {
         if (dividendInfo.length !== 0) {
@@ -100,19 +126,28 @@ const Stock = () => {
     }, [revenueInfo]);
 
     const accessAPI = async (method, req_url, req_data, error_message) => {
+        let request;
         if (method === 'GET') {
             req_url += '?';
             Object.keys(req_data).map((key) => {
                 req_url += key + "=" + req_data[key];
             });
-        }
 
-        const request = await fetch(req_url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+            request = await fetch(req_url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+        } else {
+            request = await fetch(req_url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(req_data)
+            });
+        }
 
         let response = await request.json();
         if (request.status === 200) {
@@ -146,7 +181,7 @@ const Stock = () => {
         };
     };
 
-    const getFavoriteList = (member_account) => {
+    const getFavoriteListDetail = (member_account) => {
         const req_data = {
             'member_account': member_account
         };
@@ -154,24 +189,55 @@ const Stock = () => {
         accessAPI('GET', 'http://localhost:5277/member/getFavoriteList', req_data, '無法取得會員我的最愛')
             .then((response) => {
                 let result = {};
-                let inlist = false;
                 response['data'].map((list) => {
                     result[list['list_name']] = false;
                     list['stock_list'].map((stock) => {
                         if (stock['stock_id'] === stockTarget['stock_id']) {
                             result[list['list_name']] = true;
-                            inlist = true;
                             return;
                         }
                     });
                 });
 
                 setFavoriteList(result);
+            });
+    }
 
-                if (inlist) {
-                    document.getElementsByClassName('add-list')[0].firstChild.innerHTML = '已追蹤';
-                    document.getElementsByClassName('add-list')[0].firstChild.classList.remove('btn-light');
-                    document.getElementsByClassName('add-list')[0].firstChild.classList.add('btn-success');
+    const addFavoriteListStock = (request) => {
+        const req_data = {
+            'member_account': request['member_account'],
+            'favorite_list_name': request['list_name'],
+            'stock_id': request['stock_id'],
+            'stock_name': request['stock_name']
+        };
+
+        accessAPI('POST', 'http://localhost:5277/member/addFavoriteListStock', req_data, '無法新增股票至我的最愛 ' + request['favorite_list_name'])
+            .then((response) => {
+                console.log(response);
+                if (response['metadata']['status'] === 'success') {
+                    setFavoriteList(prevState => ({
+                        ...prevState,
+                        [request['list_name']]: true,
+                    }));
+                }
+            });
+    }
+
+    const deleteFavoriteListStock = (request) => {
+        const req_data = {
+            'member_account': request['member_account'],
+            'favorite_list_name': request['list_name'],
+            'stock_id': request['stock_id'],
+        };
+
+        accessAPI('POST', 'http://localhost:5277/member/deleteFavoriteListStock', req_data, '無法刪除我的最愛股票 ' + request['favorite_list_name'])
+            .then((response) => {
+                console.log(response);
+                if (response['metadata']['status'] === 'success') {
+                    setFavoriteList(prevState => ({
+                        ...prevState,
+                        [request['list_name']]: false,
+                    }));
                 }
             });
     }
@@ -308,6 +374,21 @@ const Stock = () => {
                                                 ...prevState,
                                                 [e.target.name]: e.target.checked,
                                             }));
+
+                                            if (e.target.checked) {
+                                                addFavoriteListStock({
+                                                    'member_account': member,
+                                                    'list_name': e.target.name,
+                                                    'stock_id': stockTarget['stock_id'],
+                                                    'stock_name': stockTarget['stock_name']
+                                                });
+                                            } else {
+                                                deleteFavoriteListStock({
+                                                    'member_account': member,
+                                                    'list_name': e.target.name,
+                                                    'stock_id': stockTarget['stock_id']
+                                                });
+                                            }
                                         }}
                                             checked={favoriteList[list_name]} />
                                         <label className="form-check-label" htmlFor={'list_' + index}>{list_name}</label>
