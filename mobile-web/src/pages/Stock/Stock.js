@@ -419,24 +419,16 @@ const Stock = () => {
             </div>
             <div className='mb-3 content'>
                 <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : ' hidden')}>
-                    {
-                        showItems['dividend'] ? <DividendCard input_data={dividendInfo} /> : <p></p>
-                    }
+                    {showItems['dividend']&&<DividendCard input_data={dividendInfo}/>}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['company_profile'] ? '' : ' hidden')}>
-                    {
-                        showItems['company_profile'] ? <CompanyProfile input_data={companyProfile} /> : <p></p>
-                    }
+                    {showItems['company_profile']&&<CompanyProfile input_data={companyProfile}/>}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['eps'] ? '' : ' hidden')}>
-                    {
-                        showItems['eps'] ? <EPSCard input_data={epsInfo} /> : <p></p>
-                    }
+                    {showItems['eps']&&<EPSCard input_data={epsInfo} />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['revenue'] ? '' : ' hidden')}>
-                    {
-                        showItems['revenue'] ? <RevenueCard input_data={revenueInfo} /> : <p></p>
-                    }
+                    {showItems['revenue']&&<RevenueCard input_data={revenueInfo} />}
                 </div>
             </div>
         </MDBContainer>
