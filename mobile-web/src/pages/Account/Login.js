@@ -72,6 +72,8 @@ const Login = () => {
                             resolve();
                         });
                         promise.then(() => {
+                            if(state === null)
+                                navigate('/account');
                             navigate(state);
                         });
                         promise.catch((error) => {
