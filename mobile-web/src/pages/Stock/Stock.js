@@ -249,23 +249,23 @@ const Stock = () => {
 
         accessAPI('GET', 'http://localhost:5277/twse/getCompanyDividendPolicy', req_data, '無法取得股利政策')
             .then((response) => {
+                console.log(response);
                 let result = response['data'].map((data) => {
+                    let time = data['period'] == 'FY'? data['year'] : data['year'] + "/" + data['period']
                     return {
-                        time: data['dividend_period'],
-                        value: data['cash_dividend(dollors)'],
+                        time: time,
+                        value: data['cash_dividend'],
                         make_up_dividend_days: data['make_up_dividend_days']
                     };
                 });
 
-                result = result.filter((element) => {
-                    return Number(element['time']) >= 2007;
+                result = result.slice(0,15)
+
+                result = result.sort(function (a, b) {
+                    return a.time.split('/')[0] > b.time.split('/')[0] ? 1 : -1;
                 });
 
                 const dividendOverviewInfo = getDividendOverviewInfo(result);
-
-                result = result.sort(function (a, b) {
-                    return a.time > b.time ? 1 : -1;
-                });
 
                 setDividendInfo([{
                     'overview': dividendOverviewInfo,
