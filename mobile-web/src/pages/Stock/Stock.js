@@ -66,6 +66,7 @@ const Stock = () => {
     }, [stockTarget]);
 
     useEffect(() => {
+        console.log(favoriteList);
         let all_false = Object.values(favoriteList).every(v => v === false);
         if (all_false) {
             document.getElementsByClassName('add-list')[0].firstChild.innerHTML = '+加入追蹤';
@@ -359,16 +360,14 @@ const Stock = () => {
     return (
         <MDBContainer className='mt-3 stock_mainpage'>
             <div className='row'>
-                <Dropdown className="col-4 add-list" autoClose="outside">
-                    <Dropdown.Toggle id="dropdown-autoclose-outside" onClick={() => {
+                <Dropdown className="col-4 add-list" autoClose="outside" onClick={() => {
                         if (member === "") {
                             navigate('/login', {
                                 state: '/stock?id=' + searchParams.get("id")
                             });
                         }
                     }}>
-                        +加入追蹤
-                    </Dropdown.Toggle>
+                    <Dropdown.Toggle id="dropdown-autoclose-outside">+加入追蹤</Dropdown.Toggle>
 
                     <Dropdown.Menu>
                         {
