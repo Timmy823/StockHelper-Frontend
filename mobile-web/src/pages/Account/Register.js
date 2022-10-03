@@ -81,7 +81,9 @@ const Register = () => {
                         "telephone": value.telphone
                     }, (response) => {
                         if(response.metadata.status == 'success') 
-                            navigate('/login');
+                            navigate('/login', {
+                                state: '/account'
+                            });
     
                         document.getElementsByClassName('register-message')[0].innerHTML = response.metadata.desc;
                         document.getElementsByClassName('register-message')[0].classList.remove("hidden");

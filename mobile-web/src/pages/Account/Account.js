@@ -64,7 +64,9 @@ const Account = () => {
                     resolve();
                 });
                 promise.then(()=>{
-                    navigate('/login');
+                    navigate('/login', {
+                        state: '/account'
+                    });
                 });
                 promise.catch((error)=>{
                     console.log(error);

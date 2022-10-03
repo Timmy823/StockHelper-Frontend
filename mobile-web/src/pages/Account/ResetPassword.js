@@ -21,7 +21,9 @@ const ResetPassword = () => {
                     let password = document.getElementsByName('new_password')[0].value;
                     let confirm = document.getElementsByName('new_password_confirm')[0].value;
                     if (password === confirm) {
-                        navigate('/login');
+                        navigate('/login', {
+                            state: '/account'
+                        });
                     }
                     else {
                         console.log("密碼輸入不一致");
@@ -30,7 +32,9 @@ const ResetPassword = () => {
             }> 送出 </MDBBtn>
             <MDBBtn className='btn-outline-info mt-3 w-100' color='link' data-mdb-ripple-color="dark" onClick={
                 () => {
-                    navigate('/login');
+                    navigate('/login', {
+                        state: '/account'
+                    });
                 }
             }> 取消 </MDBBtn>
         </MDBContainer>
