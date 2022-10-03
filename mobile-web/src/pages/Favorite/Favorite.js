@@ -48,12 +48,16 @@ const Favorite = () => {
     };
 
     useEffect(() => {
-        if (getAuthToken(login_token) === null)
-            navigate('/login');
-        getFavoriteListInfo(JSON.parse(getAuthToken(login_token))['member_account'])
-            .then((response) => {
-                setFavoriteList(response.data);
-            })
+        if (getAuthToken(login_token) === null) {
+            navigate('/login', {
+                state: '/favorite'
+            });
+        } else {
+            getFavoriteListInfo(JSON.parse(getAuthToken(login_token))['member_account'])
+                .then((response) => {
+                    setFavoriteList(response.data);
+                })
+        }
     }, []);
 
     return (

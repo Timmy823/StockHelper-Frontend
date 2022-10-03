@@ -19,7 +19,9 @@ const Account = () => {
 
     useEffect(()=>{
         if (getAuthToken(login_token) === null)
-            navigate('/login');
+            navigate('/login', {
+                state: '/account'
+            });
         setAccountInfomation(JSON.parse(getAuthToken(login_token)));
     }, [accountInfomation]);
 
@@ -62,7 +64,9 @@ const Account = () => {
                     resolve();
                 });
                 promise.then(()=>{
-                    navigate('/login');
+                    navigate('/login', {
+                        state: '/account'
+                    });
                 });
                 promise.catch((error)=>{
                     console.log(error);

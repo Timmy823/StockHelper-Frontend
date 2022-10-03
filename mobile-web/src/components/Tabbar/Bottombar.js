@@ -26,7 +26,7 @@ const bottomNavItems = [
         title:"帳戶資訊",
         icon: <img src={AccountNoClickPNG} alt="Account" />,
         activeIcon: <img src={AccountOnClickPNG} alt="Account" />,
-        path: "/login"
+        path: "/account"
     }
 ]
 
