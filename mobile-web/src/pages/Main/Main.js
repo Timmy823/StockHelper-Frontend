@@ -12,6 +12,7 @@ import Login from "../Account/Login";
 import Register from "../Account/Register";
 import CodeVerification from "../Account/CodeVerification";
 import ResetPassword from "../Account/ResetPassword";
+import ForgetPassword from "../Account/ForgetPassword";
 
 const Main = () => {
     return (
@@ -44,6 +45,10 @@ const Main = () => {
             </>} />
             <Route path='/reset_password' element={<>
                 <ResetPassword />
+                <Bottombar index={2}/>
+            </>} />
+            <Route path='/forget_password' element={<>
+                <ForgetPassword />
                 <Bottombar index={2}/>
             </>} />
 
