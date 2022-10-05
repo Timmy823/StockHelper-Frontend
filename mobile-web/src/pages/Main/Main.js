@@ -12,7 +12,7 @@ import Login from "../Account/Login";
 import Register from "../Account/Register";
 import CodeVerification from "../Account/CodeVerification";
 import ResetPassword from "../Account/ResetPassword";
-import ForgetPassword from "../Account/ForgetPassword";
+import VerifyCertification from "../Account/VerifyCertification";
 
 const Main = () => {
     return (
@@ -47,8 +47,8 @@ const Main = () => {
                 <ResetPassword />
                 <Bottombar index={2}/>
             </>} />
-            <Route path='/forget_password' element={<>
-                <ForgetPassword />
+            <Route path='/verify_certification' element={<>
+                <VerifyCertification />
                 <Bottombar index={2}/>
             </>} />
 

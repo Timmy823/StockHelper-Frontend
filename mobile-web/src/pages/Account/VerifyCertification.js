@@ -10,7 +10,7 @@ import {
 from 'mdb-react-ui-kit';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
-const ForgetPassword = () => {
+const VerifyCertification = () => {
     const navigate = useNavigate();
     const [account, setAccount] = useState("");
     const [certification, setCertification] = useState("");
@@ -118,4 +118,4 @@ const ForgetPassword = () => {
         </MDBContainer>
     );
 }
-export default ForgetPassword;
+export default VerifyCertification;
