@@ -102,7 +102,7 @@ const Login = () => {
 
                         <div className="d-flex justify-content-between mx-3 my-2">
                             <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='記住帳號密碼' />
-                            <a href="!#">忘記密碼?</a>
+                            <a href="/forget_password">忘記密碼?</a>
                         </div>
                         <div className='login-message hidden'> 登入成功 </div>
                         <MDBBtn className="mb-4 w-100">登入</MDBBtn>
