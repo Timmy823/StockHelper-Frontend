@@ -39,10 +39,6 @@ const Main = () => {
                 <Register />
                 <Bottombar index={2}/>
             </>} />
-            <Route path='/verify_code' element={<>
-                <CodeVerification />
-                <Bottombar index={2}/>
-            </>} />
             <Route path='/reset_password' element={<>
                 <ResetPassword />
                 <Bottombar index={2}/>
