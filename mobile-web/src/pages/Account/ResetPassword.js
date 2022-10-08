@@ -89,7 +89,7 @@ const ResetPassword = () => {
 
                         <div className='d-flex w-100'>
                             <MDBBtn className="mb-2 mx-2 w-50" type="submit">送出</MDBBtn>
-                            <MDBBtn tag='a' href='/login' className="btn-light mb-2 mx-2 w-50">取消</MDBBtn>
+                            <MDBBtn tag='a' href={ account === null ? '/login': '/account'} className="btn-light mb-2 mx-2 w-50">取消</MDBBtn>
                         </div>
                     </Form>
                 )}
