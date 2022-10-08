@@ -25,3 +25,12 @@ input[name="password_confirm"] {
 .register-container .text-center p{
     margin: 0;
 }
+
+.forget-password-page-input {
+    height: 500px;
+}
+
+.forget-password-page-input > form > button, 
+.forget-password-page-input > button {
+    font-size: 18px;
+}

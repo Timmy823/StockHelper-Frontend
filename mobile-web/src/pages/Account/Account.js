@@ -42,7 +42,14 @@ const Account = () => {
                 </MDBRow>
                 <MDBRow className='my-2'>
                     <MDBCol className='col-auto me-auto'>密碼：</MDBCol>
-                    <MDBBtn className='col-auto px-3 py-0' color='link' data-mdb-ripple-color='dark'> 變更</MDBBtn>
+                    <MDBBtn className='col-auto px-3 py-0' color='link' data-mdb-ripple-color='dark' onClick={
+                        () => {
+                            console.log(accountInfomation.member_account);
+                            navigate('/verify_certification', {
+                                state: accountInfomation.member_account
+                            });
+                        }
+                    }> 變更</MDBBtn>
                 </MDBRow>
                 <MDBRow className='my-2'>
                     <MDBCol className='col-auto me-auto'>聯絡電話：</MDBCol>

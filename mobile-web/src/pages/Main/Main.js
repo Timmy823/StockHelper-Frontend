@@ -10,8 +10,8 @@ import Bottombar from "../../components/Tabbar/Bottombar";
 import Account from "../Account/Account";
 import Login from "../Account/Login";
 import Register from "../Account/Register";
-import CodeVerification from "../Account/CodeVerification";
 import ResetPassword from "../Account/ResetPassword";
+import VerifyCertification from "../Account/VerifyCertification";
 
 const Main = () => {
     return (
@@ -38,12 +38,12 @@ const Main = () => {
                 <Register />
                 <Bottombar index={2}/>
             </>} />
-            <Route path='/verify_code' element={<>
-                <CodeVerification />
-                <Bottombar index={2}/>
-            </>} />
             <Route path='/reset_password' element={<>
                 <ResetPassword />
+                <Bottombar index={2}/>
+            </>} />
+            <Route path='/verify_certification' element={<>
+                <VerifyCertification />
                 <Bottombar index={2}/>
             </>} />
 
