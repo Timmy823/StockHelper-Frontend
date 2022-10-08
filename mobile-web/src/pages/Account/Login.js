@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
-import { setAuthToken } from '../../utils/TokenUtils';
+import { setAuthToken, getAuthToken } from '../../utils/TokenUtils';
 import {
     MDBContainer,
     MDBInput,
@@ -42,6 +42,11 @@ const Login = () => {
             };
         }
     };
+
+    useEffect(()=>{
+        if (getAuthToken(login_token) !== null)
+            navigate('/account');
+    }, []);
 
     return (
         <MDBContainer className="p-3 mt-1 d-flex flex-column w-100">
