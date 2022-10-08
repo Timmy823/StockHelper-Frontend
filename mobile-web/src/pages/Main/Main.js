@@ -10,7 +10,6 @@ import Bottombar from "../../components/Tabbar/Bottombar";
 import Account from "../Account/Account";
 import Login from "../Account/Login";
 import Register from "../Account/Register";
-import CodeVerification from "../Account/CodeVerification";
 import ResetPassword from "../Account/ResetPassword";
 import VerifyCertification from "../Account/VerifyCertification";
 
