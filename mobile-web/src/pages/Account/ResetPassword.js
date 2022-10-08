@@ -36,11 +36,9 @@ const ResetPassword = () => {
             return {
                 "metadata": {
                     "status": "error",
-                    "desc": "註冊失敗，請聯絡客服"
+                    "desc": "修改密碼失敗，請聯絡客服"
                 },
-                "data": {
-                    "data": ""
-                }
+                "data": {}
             };
         }
     };
@@ -65,12 +63,10 @@ const ResetPassword = () => {
                         .required("*密碼需相同"),
                 })}
                 onSubmit={async (value, { resetForm }) => {
-                    updateMember(value.password).then((response) => {
-                        if(response.metadata.status == 'success') 
-                            navigate('/login', {
-                                state: '/account'
-                            });
-
+                    updateMember(value.password).then(() => {
+                        navigate('/login', {
+                            state: '/account'
+                        });
                     });
                     resetForm();
                 }}
