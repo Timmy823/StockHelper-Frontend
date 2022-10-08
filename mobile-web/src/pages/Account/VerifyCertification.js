@@ -56,7 +56,7 @@ const VerifyCertification = () => {
     }, [state])
 
     useEffect(() => {
-        if (member_account !== "") {
+        if (member_account !== null && member_account !== "") {
             const code = randomString(7);
 
             sendEmailCertification({
@@ -74,7 +74,7 @@ const VerifyCertification = () => {
 
     return (
         <MDBContainer className="forget-password-page-input justify-content-center d-flex flex-column w-100">
-            {(certification === "") && <>
+            {(member_account === null) && <>
                 <h3>輸入電子信箱</h3>
                 <Formik
                     initialValues={{
@@ -103,7 +103,7 @@ const VerifyCertification = () => {
                 </Formik>
 
             </>}
-            {(certification !== "") && <>
+            {(member_account !== null) && <>
                 <h3>驗證碼已發送至{member_account}，請輸入驗證碼</h3>
                 <MDBInput wrapperClass='mt-4 p-1 ' label='驗證碼' type='certification' name='certification' />
                 <MDBBtn outline rounded className='mt-4 mb-1 p-3' onClick={
