@@ -9,12 +9,25 @@
 }
 
 .favorite-page .option-button-list li {
-    padding: 5px 10px 0px 10px;
+    padding: 0px 10px 0px 10px;
     list-style: none;
     color: white;
 }
 .favorite-page .option-button-list .selected {
     border-bottom: solid orange 3px
+}
+
+.favorite-page .btn-floating {
+    top: 430px;
+    left: 310px;
+    width: 3.8125rem;
+    height: 3.8125rem;
+}
+
+.favorite-page .btn-floating .far {
+    width: 3.0125rem;
+    line-height: 3.0125rem;
+    margin: -13px 0px -10px 0px;
 }
 
 hr {
