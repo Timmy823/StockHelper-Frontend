@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuthToken } from '../../utils/TokenUtils';
 import ListInstantStock from "../../components/Card/ListInstantStock";
+import EditListWindow from '../../components/Window/EditListWindow';
 import "./Favorite.css";
 import { MDBBtn, MDBContainer, MDBNavbar, MDBNavbarItem, MDBIcon } from 'mdb-react-ui-kit';
 
 const Favorite = () => {
     const navigate = useNavigate();
+    const [account, setAccount] = useState();
+    const [editingShow, setEditingShow] = useState(false);
     const login_token = 'account_info';
 
     const [FavoriteList, setFavoriteList] = useState([{
@@ -52,12 +55,17 @@ const Favorite = () => {
                 state: '/favorite'
             });
         } else {
+            setAccount(JSON.parse(getAuthToken(login_token))['member_account']);
             getFavoriteListInfo(JSON.parse(getAuthToken(login_token))['member_account'])
                 .then((response) => {
                     setFavoriteList(response.data);
                 })
         }
     }, []);
+
+    useEffect(()=>{
+        console.log(FavoriteList);
+    },[FavoriteList])
 
     return (
         <MDBContainer className='favorite-page'>
@@ -91,9 +99,19 @@ const Favorite = () => {
                     }} /><hr /></>;
                 })}
             </div>
-            <MDBBtn floating color='warning' className='mx-1' title='編輯列表' style={{ color: '#fff' }}>
+            <MDBBtn floating color='warning' className='mx-1' title='編輯列表' style={{ color: '#fff' }} onClick={()=>{
+                setEditingShow(true);
+            }}>
                 <MDBIcon far icon="edit" size='lg'/> 編輯列表
             </MDBBtn>
+            {editingShow &&
+                <EditListWindow /** 編輯視窗 */
+                    show={editingShow}
+                    setShow={setEditingShow}
+                    setFavoriteList={setFavoriteList}
+                    account={account}
+                    data={FavoriteList}
+                />}
         </MDBContainer>
     );
 }
