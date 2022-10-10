@@ -41,7 +41,7 @@ const Stock = () => {
         revenue: false,
     });
     const [stockTarget, setStockTarget] = useState({});
-    const [dividendInfo, setDividendInfo] = useState([]);
+    const [dividendInfo, setDividendInfo] = useState({});
     const [companyProfile, setCompanyProfile] = useState({});
     const [epsInfo, setEpsInfo] = useState([]);
     const [revenueInfo, setRevenueInfo] = useState([]);
@@ -81,7 +81,7 @@ const Stock = () => {
     }, [favoriteList]);
 
     useEffect(() => {
-        if (dividendInfo.length !== 0) {
+        if (Object.keys(dividendInfo).length !== 0) {
             setShowItems(prevState => ({
                 ...prevState,
                 dividend: true,
@@ -161,8 +161,10 @@ const Stock = () => {
                 makeup += 1;
                 makeup_day += Number(element['make_up_dividend_days']);
             }
-            if (index < 10 && !isNaN(element['value']))
-                decade_cash_dividend += Number(element['value']);
+            if (index < 10 && !isNaN(element['cash']))
+                decade_cash_dividend += Number(element['cash']);
+
+            delete element['make_up_dividend_days'];
         });
 
         return {
@@ -244,7 +246,8 @@ const Stock = () => {
                     let time = data['period'] == 'FY'? data['year'] : data['year'] + "/" + data['period']
                     return {
                         time: time,
-                        value: data['cash_dividend'],
+                        cash: data['cash_dividend'],
+                        stock: data['stock_dividend'],
                         make_up_dividend_days: data['make_up_dividend_days']
                     };
                 });
@@ -257,10 +260,10 @@ const Stock = () => {
 
                 const dividendOverviewInfo = getDividendOverviewInfo(result);
 
-                setDividendInfo([{
+                setDividendInfo({
                     'overview': dividendOverviewInfo,
                     'data': result
-                }]);
+                });
             });
     };
 

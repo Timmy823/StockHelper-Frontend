@@ -4,10 +4,15 @@ import BarChart from "../Chart/BarChart";
 import './Card.css'
 
 const DividendCard = ({ input_data, OnHide }) => {
-    const setting = {}
+    const setting = {
+        'bar_color': {
+            'cash': ' #f4af1c',
+            'stock': '#f28eb8'
+        }
+    }
     useEffect(() => {
         let root = document.querySelector('.dividend_card .chart');
-        BarChart(root, input_data, setting);
+        BarChart(root, input_data['data'], setting);
     }, [])
 
     return (
@@ -22,9 +27,9 @@ const DividendCard = ({ input_data, OnHide }) => {
                 }}></MDBBtn>
             </MDBRow>
             <MDBRow className='d-inline-flex ms-2 overview'>
-                <p className='col-3'>填息率: {input_data[0]['overview']['makeup_probability']}%</p>
-                <p className='col-4'>平均填息天數: {input_data[0]['overview']['makeup_avg_day']}天</p>
-                <p className='col-4'>平均現金股利: {input_data[0]['overview']['decade_avg_cash_dividend']}元</p>
+                <p className='col-3'>填息率: {input_data['overview']['makeup_probability']}%</p>
+                <p className='col-4'>平均填息天數: {input_data['overview']['makeup_avg_day']}天</p>
+                <p className='col-4'>平均現金股利: {input_data['overview']['decade_avg_cash_dividend']}元</p>
             </MDBRow>
 
             <div className='chart' />
