@@ -6,12 +6,8 @@
     border-radius: 30px;
     padding: 2px;
 }
-.dividend_card .overview {
-    display: inline-flex;
-}
 .dividend_card .overview p{
-   font-size: 4px;
-   margin-right: 4px;
+   font-size: 7px;
    color: white;
 }
 .dividend_card .chart,

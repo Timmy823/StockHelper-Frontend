@@ -1,26 +1,39 @@
 import React, { useEffect } from "react";
+import { MDBBtn, MDBContainer, MDBRow } from "mdb-react-ui-kit";
 import BarChart from "../Chart/BarChart";
 import './Card.css'
 
-const DividendCard = (props) => {
-    const setting = {}
+const DividendCard = ({ input_data, OnHide }) => {
+    const setting = {
+        'bar_color': {
+            'cash': ' #f4af1c',
+            'stock': '#f28eb8'
+        }
+    }
     useEffect(() => {
         let root = document.querySelector('.dividend_card .chart');
-        BarChart(root, props.input_data, setting);
-        console.log(props);
+        BarChart(root, input_data['data'], setting);
     }, [])
 
     return (
-        <div className='dividend_card'>
-            <h6 className='ms-3 mt-1'>股利政策</h6>
-            <div className='overview'>
-                <p>近15年</p>
-                <p>填息率: {props.input_data[0]['overview']['makeup_probability']}%</p>
-                <p>平均填息天數: {props.input_data[0]['overview']['makeup_avg_day']}天</p>
-                <p>平均現金股利: {props.input_data[0]['overview']['decade_avg_cash_dividend']}元</p>
-            </div>
+        <MDBContainer className='dividend_card'>
+            <MDBRow>
+                <h6 className='ms-2 mt-1 col-10'>股利政策</h6>
+                <MDBBtn className='btn-close btn-close-white' color='none' onClick={() => {
+                    OnHide(prevState => ({
+                        ...prevState,
+                        dividend: false,
+                    }));
+                }}></MDBBtn>
+            </MDBRow>
+            <MDBRow className='d-inline-flex ms-2 overview'>
+                <p className='col-3'>填息率: {input_data['overview']['makeup_probability']}%</p>
+                <p className='col-4'>平均填息天數: {input_data['overview']['makeup_avg_day']}天</p>
+                <p className='col-4'>平均現金股利: {input_data['overview']['decade_avg_cash_dividend']}元</p>
+            </MDBRow>
+
             <div className='chart' />
-        </div>
-    )
+        </MDBContainer>
+    );
 }
 export default DividendCard;
