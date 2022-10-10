@@ -66,7 +66,6 @@ const Stock = () => {
     }, [stockTarget]);
 
     useEffect(() => {
-        console.log(favoriteList);
         let all_false = Object.values(favoriteList).every(v => v === false);
         if (all_false) {
             document.getElementsByClassName('add-list')[0].firstChild.innerHTML = '+加入追蹤';
@@ -80,15 +79,6 @@ const Stock = () => {
             document.getElementsByClassName('add-list')[0].firstChild.classList.add('btn-success');
         }
     }, [favoriteList]);
-
-    useEffect(() => {
-        if (dividendInfo.length !== 0) {
-            setShowItems(prevState => ({
-                ...prevState,
-                dividend: true,
-            }));
-        }
-    }, [dividendInfo]);
 
     useEffect(() => {
         if (dividendInfo.length !== 0) {
@@ -250,7 +240,6 @@ const Stock = () => {
 
         accessAPI('GET', 'http://localhost:5277/twse/getCompanyDividendPolicy', req_data, '無法取得股利政策')
             .then((response) => {
-                console.log(response);
                 let result = response['data'].map((data) => {
                     let time = data['period'] == 'FY'? data['year'] : data['year'] + "/" + data['period']
                     return {
@@ -424,7 +413,11 @@ const Stock = () => {
             </div>
             <div className='mb-3 content'>
                 <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : ' hidden')}>
-                    {showItems['dividend'] && <DividendCard input_data={dividendInfo} />}
+                    {showItems['dividend'] && 
+                        <DividendCard 
+                            input_data={dividendInfo}
+                            OnHide={setShowItems}
+                        />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['company_profile'] ? '' : ' hidden')}>
                     {showItems['company_profile'] && <CompanyProfile input_data={companyProfile} />}
