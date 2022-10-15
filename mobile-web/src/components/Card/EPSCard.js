@@ -6,7 +6,9 @@ const EPSCard = ({ input_data }) => {
     const setting = {
         'bar_color': {
             'value': ' #f4af1c',
-        }
+        },
+        'bar_padding': 0.1,
+        'xaxis_interval': 5
     };
 
     useEffect(() => {

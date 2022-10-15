@@ -35,7 +35,7 @@ function BarChart(root, BarData, setting) {
     const x = d3.scaleBand()
         .domain(BarData.map(d => d.time))
         .range([0, width - margin.left - margin.right])
-        .padding(0.4);
+        .padding(setting['bar_padding']||0.4);
     const y = d3.scaleLinear()
         .domain([0, d3.max(BarData.map((element) => {
             let value = 0;
@@ -44,6 +44,9 @@ function BarChart(root, BarData, setting) {
             return value;
         }))])
         .range([height, 0]);
+
+    const x_axis = d3.axisBottom(x).tickValues(x.domain().filter((e, i)=>i%(setting['xaxis_interval']||1) == 0));
+    const y_axis = d3.axisLeft(y).tickFormat(function (d) { return d;}).ticks(6);
 
     const stackData = d3.stack()
         .keys(items)(BarData)
@@ -66,15 +69,12 @@ function BarChart(root, BarData, setting) {
         .attr('transform', `translate(0, ${height})`)
         .style('font-size', 7)
         .style('color', 'white')
-        .call(d3.axisBottom(x));
+        .call(x_axis);
+        
     svg.append('g')
         .attr('class', 'yaxis')
         .style('font-size', 7)
         .style('color', 'white')
-        .call(d3.axisLeft(y).tickFormat(
-            function (d) {
-                return d;
-            }).ticks(5)
-        )
+        .call(y_axis);
 }
 export default BarChart;
