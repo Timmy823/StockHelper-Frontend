@@ -27,7 +27,7 @@ h5, h6 {
 }
 
 .list-instant-stock .rise {
-    color: '#ff0000';
+    color: #ff0000;  
 }
 .list-instant-stock .down{
     color: green;
