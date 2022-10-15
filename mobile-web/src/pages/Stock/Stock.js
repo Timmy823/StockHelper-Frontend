@@ -429,7 +429,11 @@ const Stock = () => {
                         />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['revenue'] ? '' : ' hidden')}>
-                    {showItems['revenue'] && <RevenueCard input_data={revenueInfo} />}
+                    {showItems['revenue'] && 
+                        <RevenueCard 
+                            input_data={revenueInfo} 
+                            OnHide={setShowItems}
+                        />}
                 </div>
             </div>
         </MDBContainer>
