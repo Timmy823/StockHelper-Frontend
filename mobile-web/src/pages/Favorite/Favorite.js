@@ -13,7 +13,7 @@ const Favorite = () => {
     const login_token = 'account_info';
 
     const [FavoriteList, setFavoriteList] = useState([]);
-    const [stockTrend, setStockTrend] = useState({});
+    const [ListStockItem, setListStockItem] = useState({});
     
     const [ButtonIndex, setButtonIndex] = useState(0);
     let initialClass = 0;
@@ -94,11 +94,10 @@ const Favorite = () => {
     }, []);
 
     useEffect(()=>{
+        console.log(FavoriteList);
         FavoriteList.map((list_data)=>{
             list_data.stock_list.map((stock)=>{
-                if (stockTrend === undefined)
-                    return;
-                if (!(stock.stock_id in stockTrend)) {
+                if (!(stock.stock_id in ListStockItem)) {
                     getRecentStockClosingPrice(stock.stock_id, "無法取得收盤價")
                         .then((response)=>{
                             if (response.metadata.status === 'success') {
@@ -108,10 +107,24 @@ const Favorite = () => {
                                         'value': Number(data.closing_price)
                                     };
                                 });
-            
-                                setStockTrend(prevState => ({
+
+                                setListStockItem(prevState => ({
                                     ...prevState,
-                                    [stock.stock_id] : result
+                                    [stock.stock_id] : <><ListInstantStock 
+                                        className={'stockid_' + stock.stock_id}
+                                        key={stock.stock_id}
+                                        stock={{
+                                            'stock_name': stock.stock_name,
+                                            'stock_id': stock.stock_id,
+                                            'stock_type': ' ',
+                                            'stock_value': getLastClosingPrice(result),
+                                            'stock_value_offset': getStcokOffset(result)
+                                        }}
+                                        trend_data={[{
+                                            'name': 'index',
+                                            'data': result
+                                        }]}
+                                    /><hr /></>
                                 }));
                             }
                         });
@@ -121,7 +134,8 @@ const Favorite = () => {
     },[FavoriteList]);
 
     useEffect(()=>{
-    },[stockTrend]);
+        console.log(ButtonIndex);
+    },[ButtonIndex])
 
     return (
         <MDBContainer className='favorite-page'>
@@ -132,7 +146,7 @@ const Favorite = () => {
                         key={index}
                         id={index}
                         onClick={(e) => {
-                            setButtonIndex(e.target.id);
+                            setButtonIndex(Number(e.target.id));
                             FavoriteList.map((list, index) => {
                                 if (document.getElementsByClassName('option-button')[index].classList.contains("selected"))
                                     document.getElementsByClassName('option-button')[index].classList.remove("selected");
@@ -143,25 +157,14 @@ const Favorite = () => {
                 })}
             </MDBNavbar>
             <div className='stock-list'>
-                { FavoriteList.length != 0 &&
-                FavoriteList[ButtonIndex]['stock_list'].map((stock, index) => {
-                    if (stock.stock_id == '0000')
-                        return;
-                    return <><ListInstantStock 
-                                className={'stockid_' + stock.stock_id} 
-                                stock={{
-                                    'stock_name': stock.stock_name,
-                                    'stock_id': stock.stock_id,
-                                    'stock_type': ' ',
-                                    'stock_value': getLastClosingPrice(stockTrend[stock.stock_id]),
-                                    'stock_value_offset': getStcokOffset(stockTrend[stock.stock_id])
-                                }}
-                                trend_data={[{
-                                    'name': 'index',
-                                    'data': stockTrend[stock.stock_id]
-                                }]}
-                            /><hr /></>;
-                })}
+                {
+                    FavoriteList.length > 0 &&
+                    FavoriteList.map((element, index)=>{
+                        return element.stock_list.map((stock)=>{
+                            return (ButtonIndex === index)&&ListStockItem[stock.stock_id];
+                        })
+                    })
+                }
             </div>
             <MDBBtn floating color='warning' className='mx-1' title='編輯列表' style={{ color: '#fff' }} onClick={()=>{
                 setEditingShow(true);
