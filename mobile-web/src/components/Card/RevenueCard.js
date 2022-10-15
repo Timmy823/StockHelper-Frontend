@@ -2,11 +2,18 @@ import React, { useEffect } from "react";
 import BarChart from "../Chart/BarChart";
 import './Card.css'
 
-const RevenueCard = (props) => {
-    const setting = {}
+const RevenueCard = ({ input_data }) => {
+    const setting = {
+        'bar_color': {
+            'value': ' #f4af1c',
+        },
+        'bar_padding': 0.05,
+        'xaxis_interval': 11
+    };
+    
     useEffect(() => {
         let root = document.querySelector('.revenue_card .chart');
-        BarChart(root, props.input_data, setting);
+        BarChart(root, input_data, setting);
     }, [])
 
     return (

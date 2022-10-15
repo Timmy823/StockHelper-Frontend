@@ -13,7 +13,7 @@ import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
 import CompanyProfile from '../../components/Card/CompanyProfile';
 import EPSCard from '../../components/Card/EPSCard';
-import RevenueCard from '../../components/Card/Revenue';
+import RevenueCard from '../../components/Card/RevenueCard';
 
 const Stock = () => {
     const secretKey = "0123456789ASDFGH";
@@ -341,9 +341,7 @@ const Stock = () => {
                     return a.time > b.time ? 1 : -1;
                 });
 
-                setRevenueInfo([{
-                    'data': result
-                }]);
+                setRevenueInfo(result);
             });
     };
 
