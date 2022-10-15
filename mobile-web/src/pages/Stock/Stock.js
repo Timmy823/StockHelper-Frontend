@@ -424,7 +424,11 @@ const Stock = () => {
                     {showItems['company_profile'] && <CompanyProfile input_data={companyProfile} />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['eps'] ? '' : ' hidden')}>
-                    {showItems['eps'] && <EPSCard input_data={epsInfo} />}
+                    {showItems['eps'] && 
+                        <EPSCard 
+                            input_data={epsInfo}
+                            OnHide={setShowItems}
+                        />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['revenue'] ? '' : ' hidden')}>
                     {showItems['revenue'] && <RevenueCard input_data={revenueInfo} />}
