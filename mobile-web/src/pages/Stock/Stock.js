@@ -318,9 +318,7 @@ const Stock = () => {
                     return a.time > b.time ? 1 : -1;
                 });
 
-                setEpsInfo([{
-                    'data': result
-                }]);
+                setEpsInfo(result);
             });
     };
 

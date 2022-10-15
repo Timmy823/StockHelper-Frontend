@@ -2,13 +2,16 @@ import React, { useEffect } from "react";
 import BarChart from "../Chart/BarChart";
 import './Card.css'
 
-const EPSCard = (props) => {
-    const setting = {}
+const EPSCard = ({ input_data }) => {
+    const setting = {
+        'bar_color': {
+            'value': ' #f4af1c',
+        }
+    };
+
     useEffect(() => {
-        console.log(props);
         let root = document.querySelector('.eps_card .chart');
-        BarChart(root, props.input_data, setting);
-        
+        BarChart(root, input_data, setting);
     }, [])
 
     return (
