@@ -1,5 +1,5 @@
 .favorite-page {
-    margin: 10px 5px 70px 5px;
+    margin-bottom: 70px;
 }
 
 .navbar.option-button-list {
@@ -18,8 +18,8 @@
 }
 
 .favorite-page .btn-floating {
-    position:absolute;
-    top: 650px;
+    position: fixed;
+    top: 600px;
     left: 310px;
     width: 3.8125rem;
     height: 3.8125rem;

@@ -26,11 +26,11 @@ h5, h6 {
     color: white;
 }
 
-.stock-info p,
-.trend-info p{
-    margin: 0;
-    font-size: x-small;
-    color: white;
+.list-instant-stock .rise {
+    color: #ff0000;  
+}
+.list-instant-stock .down{
+    color: green;
 }
 
 .clear {

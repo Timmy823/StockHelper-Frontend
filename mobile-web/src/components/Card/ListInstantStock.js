@@ -4,54 +4,28 @@ import CryptoJS from 'crypto-js';
 import LineChart from "../Chart/LineChart";
 import "./ListInstantStock.css";
 
-const ListInstantStock = (props) => {
+const ListInstantStock = ({ className, stock, trend_data }) => {
     const secretKey = "0123456789ASDFGH";
     const IV = CryptoJS.enc.Utf8.parse("1122334455");
     const navigate = useNavigate();
 
-    const data = [
-        {
-            name : 'index',
-            data : [
-                {
-                    time : '9:00:00',
-                    value : 30
-                },
-                {
-                    time : '10:00:00',
-                    value : 31.3
-                },
-                {
-                    time : '11:00:00',
-                    value : 30.2
-                },
-                {
-                    time : '12:00:00',
-                    value : 29.4
-                },
-                {
-                    time : '13:00:00',
-                    value : 30.8
-                }
-            ]
-        }
-    ]
-
     const setting = {
-        oneday_timeformat : true,
+        oneday_timeformat : false,
         xy_axis : false,
         line_color : {
-            'index' : '#ff0000'
+            'index' : Number(stock['stock_value_offset'].slice(0,-1)) > 0 ? '#ff0000': 'green'
         }
     }
 
     useEffect(() => {
-        let root = document.querySelector(`.${props.className} .instant-trend`);
-        LineChart(root, data, setting);
-    },[]);
+        if (trend_data[0].data !== undefined) {
+            let root = document.querySelector(`.${className} .instant-trend`);
+            LineChart(root, trend_data, setting);
+        }
+    },[className + JSON.stringify(trend_data)]);
 
     return (
-        <div className={ 'list-instant-stock ' + (props.className || '') } onClick={(e)=>{
+        <div className={ 'list-instant-stock ' + (className || '') } onClick={(e)=>{
             const target = e.currentTarget.firstChild;
             const [stock_id, stock_type] = target.children[1].textContent.trim().split(' ');
 
@@ -70,13 +44,21 @@ const ListInstantStock = (props) => {
             navigate('/stock?id=' + stock_info_encrypt);
         }}>
             <div className='stock-info'>
-                <h6> {props.input_data['stock_name']} </h6>
-                <p> {props.input_data['stock_id']} {props.input_data['stock_type']} </p>
+                <h6> {stock['stock_name']} </h6>
+                <p> {stock['stock_id']} {stock['stock_type']} </p>
             </div>
-            <div className='trend-info'>
-                <h5> {props.input_data['stock_value']} </h5>
-                <p> {props.input_data['stock_value_offset']} </p>
+            <div>
+                {   Number(stock['stock_value_offset'].slice(0,-1)) > 0
+                    ?   <h5 className='rise'> {stock['stock_value']} </h5>
+                    :   <h5 className='down'> {stock['stock_value']} </h5>
+                }
+                {
+                    Number(stock['stock_value_offset'].slice(0,-1)) > 0
+                    ?   <p className='rise'> {stock['stock_value_offset']} </p>
+                    :   <p className='down'> {stock['stock_value_offset']} </p>
+                }
             </div>
+
             <div className='instant-trend' />
         </div>
     );
