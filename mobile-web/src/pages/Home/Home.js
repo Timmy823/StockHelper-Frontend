@@ -4,9 +4,9 @@ import MainInstantStock from "../../components/Card/MainInstantStock";
 import "./Home.css"
 
 const Home = () => {
-    const [indexTrend, setIndexTrend] = useState([]);
-    const [stockTrend, setStockTrend] = useState([]);
-    const [etfTrend, setETFTrend] = useState([]);
+    const [indexTrend, setIndexTrend] = useState({});
+    const [stockTrend, setStockTrend] = useState({});
+    const [etfTrend, setETFTrend] = useState({});
 
     const getHotIndexTrend = (stock_id) => {
         getRecentStockClosingPrice(stock_id)
@@ -19,10 +19,10 @@ const Home = () => {
                         };
                     });
 
-                    setIndexTrend(prevState => ([
+                    setIndexTrend(prevState => ({
                         ...prevState,
-                        result
-                    ]));
+                        [stock_id] : result
+                    }));
                 }
             });
     };
@@ -38,10 +38,10 @@ const Home = () => {
                         };
                     });
 
-                    setStockTrend(prevState => ([
+                    setStockTrend(prevState => ({
                         ...prevState,
-                        result
-                    ]));
+                        [stock_id] : result
+                    }));
                 }
             });
     };
@@ -57,10 +57,10 @@ const Home = () => {
                         };
                     });
 
-                    setETFTrend(prevState => ([
+                    setETFTrend(prevState => ({
                         ...prevState,
-                        result
-                    ]));
+                        [stock_id] : result
+                    }));
                 }
             });
     };
@@ -87,9 +87,25 @@ const Home = () => {
         }
     }
 
+    const getLastClosingPrice = (trend_data) => {
+        if (trend_data === undefined) {
+            return -1;
+        }
+
+        return trend_data[trend_data.length - 1].value;
+    }
+
+    const getStcokOffset = (trend_data) => {
+        if (trend_data === undefined) {
+            return '0%';
+        }
+
+        return (100*(trend_data[trend_data.length - 1].value - trend_data[0].value)/trend_data[0].value).toFixed(2) + '%';
+    }
+
     useEffect(() => {
         getHotIndexTrend('2330');
-        getHotIndexTrend('1513');
+        getHotIndexTrend('2364');
 
         getHotStockTrend('2330');
         getHotStockTrend('5483');
@@ -101,6 +117,16 @@ const Home = () => {
         getHotETFTrend('00878');
         getHotETFTrend('00892');
     }, []);
+
+    useEffect(() => {
+        console.log(indexTrend);
+    },[indexTrend]);
+
+    useEffect(() => {
+    },[stockTrend]);
+
+    useEffect(() => {
+    },[etfTrend]);
 
     return (
         <div>
@@ -114,12 +140,12 @@ const Home = () => {
                             'stock_name': '加權指數',
                             'stock_id': ' ',
                             'stock_type': ' ',
-                            'stock_value': '14263.00',
-                            'stock_value_offset': '-1.23%'
+                            'stock_value': getLastClosingPrice(indexTrend['2330']),
+                            'stock_value_offset': getStcokOffset(indexTrend['2330']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': indexTrend[0]
+                            'data': indexTrend['2330']
                         }]}
                     />
                     <MainInstantStock 
@@ -128,12 +154,12 @@ const Home = () => {
                             'stock_name': '櫃買指數',
                             'stock_id': ' ',
                             'stock_type': ' ',
-                            'stock_value': '157.00',
-                            'stock_value_offset': '+0.32%'
+                            'stock_value': getLastClosingPrice(indexTrend['2364']),
+                            'stock_value_offset': getStcokOffset(indexTrend['2364']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': indexTrend[1]
+                            'data': indexTrend['2364']
                         }]}
                     />
                 </div>
@@ -145,12 +171,12 @@ const Home = () => {
                             'stock_name': '台積電',
                             'stock_id': '2330',
                             'stock_type': '上市',
-                            'stock_value': '456.0',
-                            'stock_value_offset': '-1.23%'
+                            'stock_value': getLastClosingPrice(stockTrend['2330']),
+                            'stock_value_offset': getStcokOffset(stockTrend['2330']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': stockTrend[0]
+                            'data': stockTrend['2330']
                         }]}
                     />
                     <MainInstantStock 
@@ -159,12 +185,12 @@ const Home = () => {
                             'stock_name': '中美晶',
                             'stock_id': '5483',
                             'stock_type': '上櫃',
-                            'stock_value': '157.00',
-                            'stock_value_offset': '+0.32%'
+                            'stock_value': getLastClosingPrice(stockTrend['5483']),
+                            'stock_value_offset': getStcokOffset(stockTrend['5483']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': stockTrend[1]
+                            'data': stockTrend['5483']
                         }]}
                     />
                     <MainInstantStock 
@@ -173,12 +199,12 @@ const Home = () => {
                             'stock_name': '中興電',
                             'stock_id': '1513',
                             'stock_type': '上市',
-                            'stock_value': '63.80',
-                            'stock_value_offset': '-4.20%'
+                            'stock_value': getLastClosingPrice(stockTrend['1513']),
+                            'stock_value_offset': getStcokOffset(stockTrend['1513']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': stockTrend[2]
+                            'data': stockTrend['1513']
                         }]}
                     />
                     <MainInstantStock 
@@ -187,12 +213,12 @@ const Home = () => {
                             'stock_name': '聯發科',
                             'stock_id': '2454',
                             'stock_type': '上市',
-                            'stock_value': '580.00',
-                            'stock_value_offset': '-1.86%'
+                            'stock_value': getLastClosingPrice(stockTrend['2454']),
+                            'stock_value_offset': getStcokOffset(stockTrend['2454']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': stockTrend[3]
+                            'data': stockTrend['2454']
                         }]}
                     />
                 </div>
@@ -204,12 +230,12 @@ const Home = () => {
                             'stock_name': '元大台灣50',
                             'stock_id': '0050',
                             'stock_type': '上市',
-                            'stock_value': '456.0',
-                            'stock_value_offset': '-1.23%'
+                            'stock_value': getLastClosingPrice(etfTrend['0050']),
+                            'stock_value_offset': getStcokOffset(etfTrend['0050']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': etfTrend[0]
+                            'data': etfTrend['0050']
                         }]}
                     />
                     <MainInstantStock 
@@ -218,12 +244,12 @@ const Home = () => {
                             'stock_name': '元大高股息',
                             'stock_id': '0056',
                             'stock_type': '上市',
-                            'stock_value': '157.00',
-                            'stock_value_offset': '+0.32%'
+                            'stock_value': getLastClosingPrice(etfTrend['0056']),
+                            'stock_value_offset': getStcokOffset(etfTrend['0056']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': etfTrend[1]
+                            'data': etfTrend['0056']
                         }]}
                     />
                     <MainInstantStock 
@@ -232,12 +258,12 @@ const Home = () => {
                             'stock_name': '國泰永續高股息',
                             'stock_id': '00878',
                             'stock_type': '上市',
-                            'stock_value': '63.80',
-                            'stock_value_offset': '-4.20%'
+                            'stock_value': getLastClosingPrice(etfTrend['00878']),
+                            'stock_value_offset': getStcokOffset(etfTrend['00878']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': etfTrend[2]
+                            'data': etfTrend['00878']
                         }]}
                     />
                     <MainInstantStock 
@@ -246,12 +272,12 @@ const Home = () => {
                             'stock_name': '富邦台灣半導體',
                             'stock_id': '00892',
                             'stock_type': '上市',
-                            'stock_value': '580.00',
-                            'stock_value_offset': '-1.86%'
+                            'stock_value': getLastClosingPrice(etfTrend['00892']),
+                            'stock_value_offset': getStcokOffset(etfTrend['00892']),
                         }}
                         trend_data={[{
                             'name': 'index',
-                            'data': etfTrend[3]
+                            'data': etfTrend['00892']
                         }]}
                     />
                 </div>

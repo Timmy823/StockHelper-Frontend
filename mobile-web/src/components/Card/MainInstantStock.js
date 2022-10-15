@@ -40,7 +40,7 @@ const MainInstantStock = ({ className, stock, trend_data }) => {
         oneday_timeformat : false,
         xy_axis : false,
         line_color : {
-            'index' : '#ff0000'
+            'index' : Number(stock['stock_value_offset'].slice(0,-1)) > 0 ? '#ff0000': 'green'
         }
     }
 
@@ -49,7 +49,7 @@ const MainInstantStock = ({ className, stock, trend_data }) => {
             let root = document.querySelector(`.${className} .instant-trend`);
             LineChart(root, trend_data, setting);
         }
-    },[stock, trend_data])
+    },[className + JSON.stringify(trend_data)]);
 
     return (
         <div className={ "main-instant-stock " + (className || "") } onClick={(e)=>{
@@ -76,8 +76,15 @@ const MainInstantStock = ({ className, stock, trend_data }) => {
                     <p> {stock['stock_id']} {stock['stock_type']} </p>
                 </div>
                 <div>
-                    <h5> {stock['stock_value']} </h5>
-                    <p> {stock['stock_value_offset']} </p>
+                    {   Number(stock['stock_value_offset'].slice(0,-1)) > 0
+                        ?   <h5 className='rise'> {stock['stock_value']} </h5>
+                        :   <h5 className='down'> {stock['stock_value']} </h5>
+                    }
+                    {
+                        Number(stock['stock_value_offset'].slice(0,-1)) > 0
+                        ?   <p className='rise'> {stock['stock_value_offset']} </p>
+                        :   <p className='down'> {stock['stock_value_offset']} </p>
+                    }
                 </div>
             </div>
             <div className = 'instant-trend' />
