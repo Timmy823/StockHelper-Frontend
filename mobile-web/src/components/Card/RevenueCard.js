@@ -8,7 +8,8 @@ const RevenueCard = ({ input_data }) => {
             'value': ' #f4af1c',
         },
         'bar_padding': 0.05,
-        'xaxis_interval': 11
+        'xaxis_interval': 11,
+        'yaxis_label_name': '億'
     };
     
     useEffect(() => {
