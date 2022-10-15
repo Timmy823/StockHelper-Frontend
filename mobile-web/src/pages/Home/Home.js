@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import StockSearch from "../../components/Search/StockSearch";
 import MainInstantStock from "../../components/Card/MainInstantStock";
 import "./Home.css"
 
@@ -130,7 +129,6 @@ const Home = () => {
 
     return (
         <div>
-            <StockSearch/>
             <div className='stock-home-page'>
                 <div className='stock-index'>
                     <h3> 指數 </h3>
