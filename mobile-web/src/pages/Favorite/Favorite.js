@@ -16,7 +16,6 @@ const Favorite = () => {
     const [ListStockItem, setListStockItem] = useState({});
     
     const [ButtonIndex, setButtonIndex] = useState(0);
-    let initialClass = 0;
 
     const getFavoriteListInfo = async (account) => {
         const req_url = "http://localhost:5277/member/getFavoriteList?member_account=" + account;
@@ -94,7 +93,6 @@ const Favorite = () => {
     }, []);
 
     useEffect(()=>{
-        console.log(FavoriteList);
         FavoriteList.map((list_data)=>{
             list_data.stock_list.map((stock)=>{
                 if (!(stock.stock_id in ListStockItem)) {
@@ -133,16 +131,11 @@ const Favorite = () => {
         });
     },[FavoriteList]);
 
-    useEffect(()=>{
-        console.log(ButtonIndex);
-    },[ButtonIndex])
-
     return (
         <MDBContainer className='favorite-page'>
             <MDBNavbar className='option-button-list'>
                 {FavoriteList.map((list, index) => {
-                    initialClass = (index == 0) ? 'option-button selected' : 'option-button';
-                    return <MDBNavbarItem className={initialClass}
+                    return <MDBNavbarItem className={ 'option-button ' + (((index === 0)&&'selected') || '') }
                         key={index}
                         id={index}
                         onClick={(e) => {
@@ -150,6 +143,7 @@ const Favorite = () => {
                             FavoriteList.map((list, index) => {
                                 if (document.getElementsByClassName('option-button')[index].classList.contains("selected"))
                                     document.getElementsByClassName('option-button')[index].classList.remove("selected");
+                                return;
                             })
                             document.getElementsByClassName('option-button')[e.target.id].classList.add("selected");
                         }}
