@@ -27,6 +27,15 @@
     font-size: x-small;
     color: black;
 }
+
+.main-instant-stock .stock-info .rise {
+    color: #ff0000;
+}
+
+.main-instant-stock .stock-info .down {
+    color: green;
+}
+
 .clear {
     clear: both; 
     height: 0;

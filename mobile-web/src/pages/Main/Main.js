@@ -17,6 +17,7 @@ const Main = () => {
     return (
         <Routes>
             <Route path='/' element={<>
+                <StockSearch/>
                 <Home />
                 <Bottombar index={0}/>
             </>} />
