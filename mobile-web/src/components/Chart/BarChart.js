@@ -21,7 +21,7 @@ import * as d3 from "d3";
 function BarChart(root, BarData, setting) {
     let items = Object.keys(BarData[0]).slice(1);
 
-    const margin = { top: 0, right: 0, bottom: 20, left: 20 },
+    const margin = { top: 0, right: 0, bottom: 20, left: 30 },
         width = root.clientWidth - margin.left - margin.right,
         height = root.clientHeight - margin.top - margin.bottom;
 
@@ -46,7 +46,7 @@ function BarChart(root, BarData, setting) {
         .range([height, 0]);
 
     const x_axis = d3.axisBottom(x).tickValues(x.domain().filter((e, i)=>i%(setting['xaxis_interval']||1) == 0));
-    const y_axis = d3.axisLeft(y).tickFormat(function (d) { return d;}).ticks(6);
+    const y_axis = d3.axisLeft(y).tickFormat(function (d) { return d + (setting['yaxis_label_name']||'元');}).ticks(6);
 
     const stackData = d3.stack()
         .keys(items)(BarData)
