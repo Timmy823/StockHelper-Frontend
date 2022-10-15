@@ -4,7 +4,7 @@ import CryptoJS from 'crypto-js';
 import LineChart from "../Chart/LineChart";
 import "./MainInstantStock.css";
 
-const MainInstantStock = (props) => {
+const MainInstantStock = ({ className, stock, trend_data }) => {
     const secretKey = "0123456789ASDFGH";
     const IV = CryptoJS.enc.Utf8.parse("1122334455");
     const navigate = useNavigate();
@@ -37,7 +37,7 @@ const MainInstantStock = (props) => {
         }
     ]
     const setting = {
-        oneday_timeformat : true,
+        oneday_timeformat : false,
         xy_axis : false,
         line_color : {
             'index' : '#ff0000'
@@ -45,12 +45,14 @@ const MainInstantStock = (props) => {
     }
 
     useEffect(() => {
-        let root = document.querySelector(`.${props.className} .instant-trend`);
-        LineChart(root, data, setting);
-    },[])
+        if (trend_data[0].data !== undefined) {
+            let root = document.querySelector(`.${className} .instant-trend`);
+            LineChart(root, trend_data, setting);
+        }
+    },[stock, trend_data])
 
     return (
-        <div className={ "main-instant-stock " + (props.className || "") } onClick={(e)=>{
+        <div className={ "main-instant-stock " + (className || "") } onClick={(e)=>{
             const target = e.currentTarget.firstChild.firstChild;
             const [stock_id, stock_type] = target.children[1].textContent.trim().split(' ');
 
@@ -70,12 +72,12 @@ const MainInstantStock = (props) => {
         }}>
             <div className = 'stock-info'>
                 <div>
-                    <h6> {props.input_data['stock_name']} </h6>
-                    <p> {props.input_data['stock_id']} {props.input_data['stock_type']} </p>
+                    <h6> {stock['stock_name']} </h6>
+                    <p> {stock['stock_id']} {stock['stock_type']} </p>
                 </div>
                 <div>
-                    <h5> {props.input_data['stock_value']} </h5>
-                    <p> {props.input_data['stock_value_offset']} </p>
+                    <h5> {stock['stock_value']} </h5>
+                    <p> {stock['stock_value_offset']} </p>
                 </div>
             </div>
             <div className = 'instant-trend' />
