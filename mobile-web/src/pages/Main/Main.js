@@ -26,8 +26,9 @@ const Main = () => {
                 <Bottombar index={0}/>
             </>} />
             <Route path="/favorite" element={<>
+                {!state&&<Loading />}
                 <StockSearch />
-                <Favorite />
+                <Favorite onLoad={setState}/>
                 <Bottombar index={1}/>
             </>} />
 
