@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../Home/Home";
 import Favorite from "../Favorite/Favorite";
@@ -12,13 +12,17 @@ import Login from "../Account/Login";
 import Register from "../Account/Register";
 import ResetPassword from "../Account/ResetPassword";
 import VerifyCertification from "../Account/VerifyCertification";
+import Loading from "../Loading/Loading";
 
 const Main = () => {
+    const [state, setState] = useState(false);
+
     return (
         <Routes>
             <Route path='/' element={<>
-                <StockSearch/>
-                <Home />
+                {!state&&<Loading />}
+                <StockSearch />
+                <Home onLoad={setState}/>
                 <Bottombar index={0}/>
             </>} />
             <Route path="/favorite" element={<>

@@ -3,7 +3,7 @@ import { MDBContainer } from "mdb-react-ui-kit";
 import MainInstantStock from "../../components/Card/MainInstantStock";
 import "./Home.css"
 
-const Home = () => {
+const Home = ({ onLoad }) => {
     const [indexTrend, setIndexTrend] = useState({});
     const [stockTrend, setStockTrend] = useState({});
     const [etfTrend, setETFTrend] = useState({});
@@ -104,6 +104,8 @@ const Home = () => {
     }
 
     useEffect(() => {
+        onLoad(false);
+
         getHotIndexTrend('2330');
         getHotIndexTrend('2364');
 
@@ -117,6 +119,14 @@ const Home = () => {
         getHotETFTrend('00878');
         getHotETFTrend('00892');
     }, []);
+
+    useEffect(()=>{
+        if (Object.keys(indexTrend).length === 2 && 
+            Object.keys(stockTrend).length === 4 && 
+            Object.keys(etfTrend).length === 4) {
+            onLoad(true);
+        }
+    }, [indexTrend, stockTrend, etfTrend]);
 
     return (
         <MDBContainer className='stock-home-page'>
