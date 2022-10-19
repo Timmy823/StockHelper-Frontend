@@ -6,12 +6,13 @@ import EditListWindow from '../../components/Window/EditListWindow';
 import "./Favorite.css";
 import { MDBBtn, MDBContainer, MDBNavbar, MDBNavbarItem, MDBIcon } from 'mdb-react-ui-kit';
 
-const Favorite = () => {
+const Favorite = ({ onLoad }) => {
     const navigate = useNavigate();
     const [account, setAccount] = useState();
     const [editingShow, setEditingShow] = useState(false);
     const login_token = 'account_info';
 
+    const [firstListCount, setFirstListCount] = useState();
     const [FavoriteList, setFavoriteList] = useState([]);
     const [ListStockItem, setListStockItem] = useState({});
     
@@ -84,6 +85,8 @@ const Favorite = () => {
                 state: '/favorite'
             });
         } else {
+            onLoad(false);
+
             setAccount(JSON.parse(getAuthToken(login_token))['member_account']);
             getFavoriteListInfo(JSON.parse(getAuthToken(login_token))['member_account'])
                 .then((response) => {
@@ -93,6 +96,10 @@ const Favorite = () => {
     }, []);
 
     useEffect(()=>{
+        if (FavoriteList.length > 0) {
+            setFirstListCount(FavoriteList[0].stock_list.length);
+        }
+            
         FavoriteList.map((list_data)=>{
             list_data.stock_list.map((stock)=>{
                 if (!(stock.stock_id in ListStockItem)) {
@@ -130,6 +137,11 @@ const Favorite = () => {
             });
         });
     },[FavoriteList]);
+
+    useEffect(()=>{
+        if(firstListCount !== undefined && Object.keys(ListStockItem).length >= firstListCount)
+            onLoad(true);
+    },[ListStockItem, firstListCount])
 
     return (
         <MDBContainer className='favorite-page'>

@@ -15,7 +15,7 @@ import CompanyProfile from '../../components/Card/CompanyProfile';
 import EPSCard from '../../components/Card/EPSCard';
 import RevenueCard from '../../components/Card/RevenueCard';
 
-const Stock = () => {
+const Stock = ({ onLoad }) => {
     const secretKey = "0123456789ASDFGH";
     const IV = CryptoJS.enc.Utf8.parse("1122334455");
     const navigate = useNavigate();
@@ -47,6 +47,8 @@ const Stock = () => {
     const [revenueInfo, setRevenueInfo] = useState([]);
 
     useEffect(() => {
+        onLoad(false);
+
         setShowItems({
             dividend: false,
             company_profile: false,
@@ -66,17 +68,21 @@ const Stock = () => {
     }, [stockTarget]);
 
     useEffect(() => {
+        if (Object.keys(favoriteList).length > 0)
+            onLoad(true);
+        
         let all_false = Object.values(favoriteList).every(v => v === false);
-        if (all_false) {
-            document.getElementsByClassName('add-list')[0].firstChild.innerHTML = '+加入追蹤';
-            document.getElementsByClassName('add-list')[0].firstChild.classList.add('btn-light');
-            document.getElementsByClassName('add-list')[0].firstChild.classList.remove('btn-success');
-        }
+        
+        const target = document.getElementsByClassName('add-list')[0].firstChild;
 
-        if (!all_false) {
-            document.getElementsByClassName('add-list')[0].firstChild.innerHTML = '已追蹤';
-            document.getElementsByClassName('add-list')[0].firstChild.classList.remove('btn-light');
-            document.getElementsByClassName('add-list')[0].firstChild.classList.add('btn-success');
+        if (all_false) {
+            target.innerHTML = '+加入追蹤';
+            target.classList.add('btn-light');
+            target.classList.remove('btn-success');
+        } else {
+            target.innerHTML = '已追蹤';
+            target.classList.remove('btn-light');
+            target.classList.add('btn-success');
         }
     }, [favoriteList]);
 
@@ -243,7 +249,7 @@ const Stock = () => {
         accessAPI('GET', 'http://localhost:5277/twse/getCompanyDividendPolicy', req_data, '無法取得股利政策')
             .then((response) => {
                 let result = response['data'].map((data) => {
-                    let time = data['period'] == 'FY'? data['year'] : data['year'] + "/" + data['period']
+                    let time = data['period'] === 'FY'? data['year'] : data['year'] + "/" + data['period']
                     return {
                         time: time,
                         cash: data['cash_dividend'],
