@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuthToken } from '../../utils/TokenUtils';
+import { accessApiGet } from '../../utils/AccessApiUtils';
+import { MDBBtn, MDBContainer, MDBNavbar, MDBNavbarItem, MDBIcon } from 'mdb-react-ui-kit';
 import ListInstantStock from "../../components/Card/ListInstantStock";
 import EditListWindow from '../../components/Window/EditListWindow';
 import "./Favorite.css";
-import { MDBBtn, MDBContainer, MDBNavbar, MDBNavbarItem, MDBIcon } from 'mdb-react-ui-kit';
 
 const Favorite = ({ onLoad }) => {
     const navigate = useNavigate();
@@ -15,52 +16,25 @@ const Favorite = ({ onLoad }) => {
     const [firstListCount, setFirstListCount] = useState();
     const [FavoriteList, setFavoriteList] = useState([]);
     const [ListStockItem, setListStockItem] = useState({});
-    
+
     const [ButtonIndex, setButtonIndex] = useState(0);
 
     const getFavoriteListInfo = async (account) => {
-        const req_url = "http://localhost:5277/member/getFavoriteList?member_account=" + account;
-        const request = await fetch(req_url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+        const req_url = 'http://localhost:5277/member/getFavoriteList';
+        const req_data = {
+            'member_account': account
+        };
 
-        let response = await request.json();
-        if (request.status === 200) {
-            return response;
-        } else {
-            return {
-                "metadata": {
-                    "status": "error",
-                    "desc": "取得列表失敗"
-                },
-                "data": []
-            };
-        }
+        return accessApiGet(req_url, req_data, '取得列表失敗');
     };
 
-    const getRecentStockClosingPrice = async (stock_id, error_message) => {
-        let request = await fetch('http://localhost:5277/twse/getStockTradeInfo?stock_id=' + stock_id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+    const getRecentStockClosingPrice = async (stock_id) => {
+        const req_url = 'http://localhost:5277/twse/getStockTradeInfo';
+        const req_data = {
+            'stock_id': stock_id
+        };
 
-        let response = await request.json();
-        if (request.status === 200) {
-            return response;
-        } else {
-            return {
-                "metadata": {
-                    "status": "error",
-                    "desc": error_message
-                },
-                "data": {}
-            };
-        }
+        return accessApiGet(req_url, req_data, '無法取得近半年收盤價');
     }
 
     const getLastClosingPrice = (trend_data) => {
@@ -76,7 +50,7 @@ const Favorite = ({ onLoad }) => {
             return '0%';
         }
 
-        return (100*(trend_data[trend_data.length - 1].value - trend_data[0].value)/trend_data[0].value).toFixed(2) + '%';
+        return (100 * (trend_data[trend_data.length - 1].value - trend_data[0].value) / trend_data[0].value).toFixed(2) + '%';
     }
 
     useEffect(() => {
@@ -90,32 +64,33 @@ const Favorite = ({ onLoad }) => {
             setAccount(JSON.parse(getAuthToken(login_token))['member_account']);
             getFavoriteListInfo(JSON.parse(getAuthToken(login_token))['member_account'])
                 .then((response) => {
-                    setFavoriteList(response.data);
+                    if (response.metadata.status === 'success')
+                        setFavoriteList(response.data);
                 })
         }
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (FavoriteList.length > 0) {
             setFirstListCount(FavoriteList[0].stock_list.length);
         }
-            
-        FavoriteList.map((list_data)=>{
-            list_data.stock_list.map((stock)=>{
+
+        FavoriteList.map((list_data) => {
+            list_data.stock_list.map((stock) => {
                 if (!(stock.stock_id in ListStockItem)) {
-                    getRecentStockClosingPrice(stock.stock_id, "無法取得收盤價")
-                        .then((response)=>{
+                    getRecentStockClosingPrice(stock.stock_id)
+                        .then((response) => {
                             if (response.metadata.status === 'success') {
-                                let result = response.data.map((data)=>{
+                                let result = response.data.map((data) => {
                                     return {
-                                        'time': data.date.substring(0,4) + '-' + data.date.substring(4,6) + '-' + data.date.substring(6,8),
+                                        'time': data.date.substring(0, 4) + '-' + data.date.substring(4, 6) + '-' + data.date.substring(6, 8),
                                         'value': Number(data.closing_price)
                                     };
                                 });
 
                                 setListStockItem(prevState => ({
                                     ...prevState,
-                                    [stock.stock_id] : <><ListInstantStock 
+                                    [stock.stock_id]: <><ListInstantStock
                                         className={'stockid_' + stock.stock_id}
                                         key={stock.stock_id}
                                         stock={{
@@ -136,18 +111,18 @@ const Favorite = ({ onLoad }) => {
                 }
             });
         });
-    },[FavoriteList]);
+    }, [FavoriteList]);
 
-    useEffect(()=>{
-        if(firstListCount !== undefined && Object.keys(ListStockItem).length >= firstListCount)
+    useEffect(() => {
+        if (firstListCount !== undefined && Object.keys(ListStockItem).length >= firstListCount)
             onLoad(true);
-    },[ListStockItem, firstListCount])
+    }, [ListStockItem, firstListCount])
 
     return (
         <MDBContainer className='favorite-page'>
             <MDBNavbar className='option-button-list'>
                 {FavoriteList.map((list, index) => {
-                    return <MDBNavbarItem className={ 'option-button ' + (((index === 0)&&'selected') || '') }
+                    return <MDBNavbarItem className={'option-button ' + (((index === 0) && 'selected') || '')}
                         key={index}
                         id={index}
                         onClick={(e) => {
@@ -165,17 +140,17 @@ const Favorite = ({ onLoad }) => {
             <div className='stock-list'>
                 {
                     FavoriteList.length > 0 &&
-                    FavoriteList.map((element, index)=>{
-                        return element.stock_list.map((stock)=>{
-                            return (ButtonIndex === index)&&ListStockItem[stock.stock_id];
+                    FavoriteList.map((element, index) => {
+                        return element.stock_list.map((stock) => {
+                            return (ButtonIndex === index) && ListStockItem[stock.stock_id];
                         })
                     })
                 }
             </div>
-            <MDBBtn floating color='warning' className='mx-1' title='編輯列表' style={{ color: '#fff' }} onClick={()=>{
+            <MDBBtn floating color='warning' className='mx-1' title='編輯列表' style={{ color: '#fff' }} onClick={() => {
                 setEditingShow(true);
             }}>
-                <MDBIcon far icon="edit" size='lg'/> 編輯列表
+                <MDBIcon far icon="edit" size='lg' /> 編輯列表
             </MDBBtn>
             {editingShow &&
                 <EditListWindow /** 編輯視窗 */
