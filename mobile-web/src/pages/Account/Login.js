@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { resolvePath, useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
 import { setAuthToken, getAuthToken } from '../../utils/TokenUtils';
+import { accessApiPost } from '../../utils/AccessApiUtils';
 import {
     MDBContainer,
     MDBInput,
@@ -19,31 +20,37 @@ const Login = () => {
     const { state } = useLocation();
     const login_token = 'account_info';
 
-    const Login = async (req_body) => {
-        const request = await fetch('http://localhost:5277/member/getMemberInfo', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(req_body)
-        });
+    const Login = async (request) => {
+        const req_url = 'http://localhost:5277/member/getMemberInfo';
+        const req_body = {
+            "member_account": request.account,
+            "password": request.password
+        };
 
-        let response = await request.json();
-        if (request.status === 200) {
-            return response;
-        } else {
-            return {
-                "metadata": {
-                    "status": "error",
-                    "desc": "登入失敗，請聯絡客服"
-                },
-                "data": {
+        accessApiPost(req_url, req_body, '登入失敗，請聯絡客服')
+            .then((response) => {
+                console.log(response);
+                if (response.metadata.status === 'success') {
+                    setAuthToken(login_token, JSON.stringify(response.data));
+                } else {
+                    document.getElementsByClassName('login-message')[0].innerHTML = response.metadata.desc;
+                    document.getElementsByClassName('login-message')[0].classList.remove("hidden");
+                    document.getElementsByClassName('login-message')[0].classList.add("active");
+
+                    return Promise.reject(response.metadata.desc);
                 }
-            };
-        }
+            })
+            .then(() => {
+                if (state === null)
+                    navigate('/account');
+                navigate(state);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         if (getAuthToken(login_token) !== null)
             navigate('/account');
     }, []);
@@ -66,29 +73,10 @@ const Login = () => {
                         .required("*密碼不能為空")
                 })}
                 onSubmit={async (value, { resetForm }) => {
-                    const login_response = await Login({
-                        "member_account": value.account,
+                    Login({
+                        "account": value.account,
                         "password": value.password
                     });
-
-                    if (login_response.metadata.status === 'success') {
-                        const promise = new Promise((resolve) => {
-                            setAuthToken(login_token, JSON.stringify(login_response.data));
-                            resolve();
-                        });
-                        promise.then(() => {
-                            if(state === null)
-                                navigate('/account');
-                            navigate(state);
-                        });
-                        promise.catch((error) => {
-                            console.log(error);
-                        });
-                    }
-
-                    document.getElementsByClassName('login-message')[0].innerHTML = login_response.metadata.desc;
-                    document.getElementsByClassName('login-message')[0].classList.remove("hidden");
-                    document.getElementsByClassName('login-message')[0].classList.add("active");
 
                     resetForm();
                 }}

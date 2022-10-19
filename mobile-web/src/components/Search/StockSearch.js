@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
+import Fuse from 'fuse.js'
+import { accessApiGet } from "../../utils/AccessApiUtils";
 import "./StockSearch.css"
 import SelectSearch from 'react-select-search'
-import Fuse from 'fuse.js'
 
 const StockSearch = () => {
     const secretKey = "0123456789ASDFGH";
@@ -14,34 +15,34 @@ const StockSearch = () => {
     const [options, setOptions] = useState([]);
 
     const getCompanyList = async (type) => {
-        let request = await fetch('http://localhost:5277/twse/getAllCompanyList?type=' + type, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        let response = await request.json();
-        if (request.status === 200) {
-            let result = response['data'].map((element) => {
-                let value = {
-                    stock_name: element['Name'],
-                    stock_id: element['ID'],
-                    stock_type: type == '1' ? '上市' : '上櫃',
-                };
-
-                return {
-                    name: element['Name'],
-                    value: CryptoJS.AES.encrypt(
-                        JSON.stringify(value),
-                        CryptoJS.enc.Utf8.parse(secretKey),
-                        { iv: IV, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding }
-                    ).ciphertext.toString(CryptoJS.enc.Hex)
-                };
-            });
-
-            setOptions(prevState => prevState.concat(result));
+        const req_url = 'http://localhost:5277/twse/getAllCompanyList';
+        const req_data = {
+            'type': type
         }
+
+        accessApiGet(req_url, req_data, '無法取得公司列表')
+            .then((response) => {
+                if (response.metadata.status === 'success') {
+                    const result = response.data.map((element) => {
+                        let value = {
+                            stock_name: element['Name'],
+                            stock_id: element['ID'],
+                            stock_type: type == '1' ? '上市' : '上櫃',
+                        };
+
+                        return {
+                            name: element['Name'],
+                            value: CryptoJS.AES.encrypt(
+                                JSON.stringify(value),
+                                CryptoJS.enc.Utf8.parse(secretKey),
+                                { iv: IV, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding }
+                            ).ciphertext.toString(CryptoJS.enc.Hex)
+                        };
+                    });
+
+                    setOptions(prevState => prevState.concat(result));
+                }
+            })
     }
 
     useEffect(() => {
