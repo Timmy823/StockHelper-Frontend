@@ -9,6 +9,7 @@ import {
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Dropdown } from 'react-bootstrap';
 import { getAuthToken } from '../../utils/TokenUtils';
+import { accessApiGet, accessApiPost } from '../../utils/AccessApiUtils';
 import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
 import CompanyProfile from '../../components/Card/CompanyProfile';
@@ -70,9 +71,9 @@ const Stock = ({ onLoad }) => {
     useEffect(() => {
         if (Object.keys(favoriteList).length > 0)
             onLoad(true);
-        
+
         let all_false = Object.values(favoriteList).every(v => v === false);
-        
+
         const target = document.getElementsByClassName('add-list')[0].firstChild;
 
         if (all_false) {
@@ -122,44 +123,6 @@ const Stock = ({ onLoad }) => {
         }
     }, [revenueInfo]);
 
-    const accessAPI = async (method, req_url, req_data, error_message) => {
-        let request;
-        if (method === 'GET') {
-            req_url += '?';
-            Object.keys(req_data).map((key) => {
-                req_url += key + "=" + req_data[key];
-            });
-
-            request = await fetch(req_url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-        } else {
-            request = await fetch(req_url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(req_data)
-            });
-        }
-
-        let response = await request.json();
-        if (request.status === 200) {
-            return response;
-        } else {
-            return {
-                "metadata": {
-                    "status": "error",
-                    "desc": error_message
-                },
-                "data": {}
-            };
-        }
-    };
-
     const getDividendOverviewInfo = (result) => {
         let makeup = 0.0, makeup_day = 0.0, decade_cash_dividend = 0.0;
         result.forEach((element, index) => {
@@ -181,39 +144,42 @@ const Stock = ({ onLoad }) => {
     };
 
     const getFavoriteListDetail = (member_account) => {
+        const req_url = 'http://localhost:5277/member/getFavoriteList';
         const req_data = {
             'member_account': member_account
         };
 
-        accessAPI('GET', 'http://localhost:5277/member/getFavoriteList', req_data, '無法取得會員我的最愛')
+        accessApiGet(req_url, req_data, '無法取得會員我的最愛')
             .then((response) => {
-                let result = {};
-                response['data'].map((list) => {
-                    result[list['list_name']] = false;
-                    list['stock_list'].map((stock) => {
-                        if (stock['stock_id'] === stockTarget['stock_id']) {
-                            result[list['list_name']] = true;
-                            return;
-                        }
+                if (response.metadata.status === 'success') {
+                    let result = {};
+                    response.data.map((list) => {
+                        result[list['list_name']] = false;
+                        list.stock_list.map((stock) => {
+                            if (stock['stock_id'] === stockTarget['stock_id']) {
+                                result[list['list_name']] = true;
+                                return;
+                            }
+                        });
                     });
-                });
 
-                setFavoriteList(result);
+                    setFavoriteList(result);
+                }
             });
     }
 
     const addFavoriteListStock = (request) => {
+        const req_url = 'http://localhost:5277/member/addFavoriteListStock';
         const req_data = {
-            'member_account': request['member_account'],
-            'favorite_list_name': request['list_name'],
-            'stock_id': request['stock_id'],
-            'stock_name': request['stock_name']
+            'member_account': request.member_account,
+            'favorite_list_name': request.list_name,
+            'stock_id': request.stock_id,
+            'stock_name': request.stock_name
         };
 
-        accessAPI('POST', 'http://localhost:5277/member/addFavoriteListStock', req_data, '無法新增股票至我的最愛 ' + request['favorite_list_name'])
+        accessApiPost(req_url, req_data, '無法新增股票至我的最愛 ' + request.list_name)
             .then((response) => {
-                console.log(response);
-                if (response['metadata']['status'] === 'success') {
+                if (response.metadata.status === 'success') {
                     setFavoriteList(prevState => ({
                         ...prevState,
                         [request['list_name']]: true,
@@ -223,16 +189,16 @@ const Stock = ({ onLoad }) => {
     }
 
     const deleteFavoriteListStock = (request) => {
+        const req_url = 'http://localhost:5277/member/deleteFavoriteListStock';
         const req_data = {
-            'member_account': request['member_account'],
-            'favorite_list_name': request['list_name'],
-            'stock_id': request['stock_id'],
+            'member_account': request.member_account,
+            'favorite_list_name': request.list_name,
+            'stock_id': request.stock_id,
         };
 
-        accessAPI('POST', 'http://localhost:5277/member/deleteFavoriteListStock', req_data, '無法刪除我的最愛股票 ' + request['favorite_list_name'])
+        accessApiPost(req_url, req_data, '無法新增股票至我的最愛 ' + request.list_name)
             .then((response) => {
-                console.log(response);
-                if (response['metadata']['status'] === 'success') {
+                if (response.metadata.status === 'success') {
                     setFavoriteList(prevState => ({
                         ...prevState,
                         [request['list_name']]: false,
@@ -242,76 +208,80 @@ const Stock = ({ onLoad }) => {
     }
 
     const getDividendInfo = (stock_id) => {
+        const req_url = 'http://localhost:5277/twse/getCompanyDividendPolicy';
         const req_data = {
             'stock_id': stock_id
         };
 
-        accessAPI('GET', 'http://localhost:5277/twse/getCompanyDividendPolicy', req_data, '無法取得股利政策')
+        accessApiGet(req_url, req_data, '無法取得股利政策')
             .then((response) => {
-                let result = response['data'].map((data) => {
-                    let time = data['period'] === 'FY'? data['year'] : data['year'] + "/" + data['period']
-                    return {
-                        time: time,
-                        cash: data['cash_dividend'],
-                        stock: data['stock_dividend'],
-                        make_up_dividend_days: data['make_up_dividend_days']
-                    };
-                });
+                if (response.metadata.status === 'success') {
+                    let result = response.data.map(data => {
+                        return {
+                            time: data.period === 'FY' ? data.year : data.year + "/" + data.period,
+                            cash: data.cash_dividend,
+                            stock: data.stock_dividend,
+                            make_up_dividend_days: data.make_up_dividend_days
+                        };
+                    });
 
-                result = result.slice(0,15)
+                    result = result.slice(0, 15)
 
-                result = result.sort(function (a, b) {
-                    return a.time.split('/')[0] > b.time.split('/')[0] ? 1 : -1;
-                });
+                    sort_by_time(result);
 
-                const dividendOverviewInfo = getDividendOverviewInfo(result);
+                    const dividendOverviewInfo = getDividendOverviewInfo(result);
 
-                setDividendInfo({
-                    'overview': dividendOverviewInfo,
-                    'data': result
-                });
+                    setDividendInfo({
+                        'overview': dividendOverviewInfo,
+                        'data': result
+                    });
+                }
             });
     };
 
     const getCompanyProfile = (stock_id) => {
+        const req_url = 'http://localhost:5277/twse/getCompanyProfile';
         const req_data = {
             'stock_id': stock_id
         };
 
-        accessAPI('GET', 'http://localhost:5277/twse/getCompanyProfile', req_data, '無法取得公司基本資料')
+        accessApiGet(req_url, req_data, '無法取得公司基本資料')
             .then((response) => {
-                let result = {
-                    'overview': {
-                        'chairman': response['data']['chairman'],
-                        'president': response['data']['president'],
-                        'created_date': response['data']['created_date'],
-                        'stock_date': response['data']['stock_date'],
-                    },
-                    'contact': {
-                        'website': response['data']['website'],
-                        'address': response['data']['address'],
-                        'email': response['data']['email'],
-                        'telephone': response['data']['telephone'],
-                        'fax': response['data']['fax'],
-                    },
-                    'main_business': response['data']['main_business'],
-                    'market': {
-                        'share_capital': response['data']['share_capital'],
-                        'market_value': response['data']['market_value'],
-                        'share_holding_radio': response['data']['share_holding_radio'],
-                    },
-                };
+                if (response.metadata.status === 'success') {
+                    const result = {
+                        'overview': {
+                            'chairman': response.data.chairman,
+                            'president': response.data.president,
+                            'created_date': response.data.created_date,
+                            'stock_date': response.data.stock_date,
+                        },
+                        'contact': {
+                            'website': response.data.website,
+                            'address': response.data.address,
+                            'email': response.data.email,
+                            'telephone': response.data.telephone,
+                            'fax': response.data.fax,
+                        },
+                        'main_business': response.data.main_business,
+                        'market': {
+                            'share_capital': response.data.share_capital,
+                            'market_value': response.data.market_value,
+                            'share_holding_radio': response.data.share_holding_radio,
+                        },
+                    };
 
-                setCompanyProfile(result);
+                    setCompanyProfile(result);
+                }
             });
     };
 
     const getEps = (stock_id) => {
+        const req_url = 'http://localhost:5277/twse/getStockEps';
         const req_data = {
             'stock_id': stock_id
         };
 
-        accessAPI('GET', 'http://localhost:5277/twse/getStockEps', req_data, '無法取得公司EPS')
+        accessApiGet(req_url, req_data, '無法取得公司EPS')
             .then((response) => {
                 let result = response['data'].map((data) => {
                     return {
@@ -320,47 +290,51 @@ const Stock = ({ onLoad }) => {
                     };
                 });
 
-                result = result.sort(function (a, b) {
-                    return a.time > b.time ? 1 : -1;
-                });
+                sort_by_time(result);
 
                 setEpsInfo(result);
             });
     };
 
     const getMonthlyRevenue = (stock_id) => {
+        const req_url = 'http://localhost:5277/twse/getCompanyMonthlyRevenue';
         const req_data = {
             'stock_id': stock_id
         };
 
-        accessAPI('GET', 'http://localhost:5277/twse/getCompanyMonthlyRevenue', req_data, '無法取得公司營收')
+        accessApiGet(req_url, req_data, '無法取得公司營收')
             .then((response) => {
-                let result = response['data'].map((data) => {
-                    let time = data['year'] + '/' + data['month'];
-                    return {
-                        time: time,
-                        value: (data['revenue'] / 1000000000).toFixed(2)
-                    };
-                });
+                if (response.metadata.status === 'success') {
+                    let result = response.data.map((data) => {
+                        return {
+                            time: data.year + '/' + data.month,
+                            value: (data.revenue / 1000000000).toFixed(2)
+                        };
+                    });
 
-                result = result.sort(function (a, b) {
-                    return a.time > b.time ? 1 : -1;
-                });
+                    sort_by_time(result);
 
-                setRevenueInfo(result);
+                    setRevenueInfo(result);
+                }
             });
+    };
+
+    const sort_by_time = (data) => {
+        data = data.sort(function (a, b) {
+            return a.time > b.time ? 1 : -1;
+        });
     };
 
     return (
         <MDBContainer className='mt-3 stock_mainpage'>
             <div className='row'>
                 <Dropdown className="col-4 add-list" autoClose="outside" onClick={() => {
-                        if (member === "") {
-                            navigate('/login', {
-                                state: '/stock?id=' + searchParams.get("id")
-                            });
-                        }
-                    }}>
+                    if (member === "") {
+                        navigate('/login', {
+                            state: '/stock?id=' + searchParams.get("id")
+                        });
+                    }
+                }}>
                     <Dropdown.Toggle id="dropdown-autoclose-outside">+加入追蹤</Dropdown.Toggle>
 
                     <Dropdown.Menu>
@@ -418,8 +392,8 @@ const Stock = ({ onLoad }) => {
             </div>
             <div className='mb-3 content'>
                 <div className={'sub-content mb-2' + (showItems['dividend'] ? '' : ' hidden')}>
-                    {showItems['dividend'] && 
-                        <DividendCard 
+                    {showItems['dividend'] &&
+                        <DividendCard
                             input_data={dividendInfo}
                             OnHide={setShowItems}
                         />}
@@ -428,16 +402,16 @@ const Stock = ({ onLoad }) => {
                     {showItems['company_profile'] && <CompanyProfile input_data={companyProfile} />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['eps'] ? '' : ' hidden')}>
-                    {showItems['eps'] && 
-                        <EPSCard 
+                    {showItems['eps'] &&
+                        <EPSCard
                             input_data={epsInfo}
                             OnHide={setShowItems}
                         />}
                 </div>
                 <div className={'sub-content mb-2' + (showItems['revenue'] ? '' : ' hidden')}>
-                    {showItems['revenue'] && 
-                        <RevenueCard 
-                            input_data={revenueInfo} 
+                    {showItems['revenue'] &&
+                        <RevenueCard
+                            input_data={revenueInfo}
                             OnHide={setShowItems}
                         />}
                 </div>
