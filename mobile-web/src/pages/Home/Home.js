@@ -11,61 +11,25 @@ const Home = ({ onLoad }) => {
 
     const getHotIndexTrend = (stock_id) => {
         getRecentStockClosingPrice(stock_id)
-            .then((response)=>{
-                if (response.metadata.status === 'success') {
-                    let result = response.data.map((data)=>{
-                        return {
-                            'time': data.date.substring(0,4) + '-' + data.date.substring(4,6) + '-' + data.date.substring(6,8),
-                            'value': Number(data.closing_price)
-                        };
-                    });
-
-                    setIndexTrend(prevState => ({
-                        ...prevState,
-                        [stock_id] : result
-                    }));
-                }
+            .then((response) => {
+                setTrendState(response, stock_id, setIndexTrend);
             });
     };
 
     const getHotStockTrend = (stock_id) => {
         getRecentStockClosingPrice(stock_id)
-            .then((response)=>{
-                if (response.metadata.status === 'success') {
-                    let result = response.data.map((data)=>{
-                        return {
-                            'time': data.date.substring(0,4) + '-' + data.date.substring(4,6) + '-' + data.date.substring(6,8),
-                            'value': Number(data.closing_price)
-                        };
-                    });
-
-                    setStockTrend(prevState => ({
-                        ...prevState,
-                        [stock_id] : result
-                    }));
-                }
+            .then((response) => {
+                setTrendState(response, stock_id, setStockTrend);
             });
     };
 
     const getHotETFTrend = (stock_id) => {
         getRecentStockClosingPrice(stock_id)
-            .then((response)=>{
-                if (response.metadata.status === 'success') {
-                    let result = response.data.map((data)=>{
-                        return {
-                            'time': data.date.substring(0,4) + '-' + data.date.substring(4,6) + '-' + data.date.substring(6,8),
-                            'value': Number(data.closing_price)
-                        };
-                    });
-
-                    setETFTrend(prevState => ({
-                        ...prevState,
-                        [stock_id] : result
-                    }));
-                }
+            .then((response) => {
+                setTrendState(response, stock_id, setETFTrend);
             });
     };
-    
+
     const getRecentStockClosingPrice = async (stock_id) => {
         const req_url = 'http://localhost:5277/twse/getStockTradeInfo';
         const req_data = {
@@ -74,6 +38,22 @@ const Home = ({ onLoad }) => {
 
         return accessApiGet(req_url, req_data, '無法取得近半年收盤價');
     }
+
+    const setTrendState = (response, stock_id, set_callback) => {
+        if (response.metadata.status === 'success') {
+            let result = response.data.map((data) => {
+                return {
+                    'time': data.date.substring(0, 4) + '-' + data.date.substring(4, 6) + '-' + data.date.substring(6, 8),
+                    'value': Number(data.closing_price)
+                };
+            });
+
+            set_callback(prevState => ({
+                ...prevState,
+                [stock_id]: result
+            }));
+        }
+    };
 
     const getLastClosingPrice = (trend_data) => {
         if (trend_data === undefined) {
@@ -88,7 +68,7 @@ const Home = ({ onLoad }) => {
             return '0%';
         }
 
-        return (100*(trend_data[trend_data.length - 1].value - trend_data[0].value)/trend_data[0].value).toFixed(2) + '%';
+        return (100 * (trend_data[trend_data.length - 1].value - trend_data[0].value) / trend_data[0].value).toFixed(2) + '%';
     }
 
     useEffect(() => {
@@ -108,9 +88,9 @@ const Home = ({ onLoad }) => {
         getHotETFTrend('00892');
     }, []);
 
-    useEffect(()=>{
-        if (Object.keys(indexTrend).length === 2 && 
-            Object.keys(stockTrend).length === 4 && 
+    useEffect(() => {
+        if (Object.keys(indexTrend).length === 2 &&
+            Object.keys(stockTrend).length === 4 &&
             Object.keys(etfTrend).length === 4) {
             onLoad(true);
         }
@@ -120,8 +100,8 @@ const Home = ({ onLoad }) => {
         <MDBContainer className='stock-home-page'>
             <div className='stock-index'>
                 <h3> 指數 </h3>
-                <MainInstantStock 
-                    className='TAIEX-index' 
+                <MainInstantStock
+                    className='TAIEX-index'
                     stock={{
                         'stock_name': '加權指數',
                         'stock_id': ' ',
@@ -134,8 +114,8 @@ const Home = ({ onLoad }) => {
                         'data': indexTrend['2330']
                     }]}
                 />
-                <MainInstantStock 
-                    className='TWO-index' 
+                <MainInstantStock
+                    className='TWO-index'
                     stock={{
                         'stock_name': '櫃買指數',
                         'stock_id': ' ',
@@ -151,8 +131,8 @@ const Home = ({ onLoad }) => {
             </div>
             <div className='hot-stock'>
                 <h3> 熱門個股 </h3>
-                <MainInstantStock 
-                    className='stock_2330' 
+                <MainInstantStock
+                    className='stock_2330'
                     stock={{
                         'stock_name': '台積電',
                         'stock_id': '2330',
@@ -165,8 +145,8 @@ const Home = ({ onLoad }) => {
                         'data': stockTrend['2330']
                     }]}
                 />
-                <MainInstantStock 
-                    className='stock_5483' 
+                <MainInstantStock
+                    className='stock_5483'
                     stock={{
                         'stock_name': '中美晶',
                         'stock_id': '5483',
@@ -179,8 +159,8 @@ const Home = ({ onLoad }) => {
                         'data': stockTrend['5483']
                     }]}
                 />
-                <MainInstantStock 
-                    className='stock_1513' 
+                <MainInstantStock
+                    className='stock_1513'
                     stock={{
                         'stock_name': '中興電',
                         'stock_id': '1513',
@@ -193,8 +173,8 @@ const Home = ({ onLoad }) => {
                         'data': stockTrend['1513']
                     }]}
                 />
-                <MainInstantStock 
-                    className='stock_2454' 
+                <MainInstantStock
+                    className='stock_2454'
                     stock={{
                         'stock_name': '聯發科',
                         'stock_id': '2454',
@@ -210,8 +190,8 @@ const Home = ({ onLoad }) => {
             </div>
             <div className='hot-etf'>
                 <h3> 熱門ETF </h3>
-                <MainInstantStock 
-                    className='etf_0050' 
+                <MainInstantStock
+                    className='etf_0050'
                     stock={{
                         'stock_name': '元大台灣50',
                         'stock_id': '0050',
@@ -224,8 +204,8 @@ const Home = ({ onLoad }) => {
                         'data': etfTrend['0050']
                     }]}
                 />
-                <MainInstantStock 
-                    className='etf_0056' 
+                <MainInstantStock
+                    className='etf_0056'
                     stock={{
                         'stock_name': '元大高股息',
                         'stock_id': '0056',
@@ -238,8 +218,8 @@ const Home = ({ onLoad }) => {
                         'data': etfTrend['0056']
                     }]}
                 />
-                <MainInstantStock 
-                    className='etf_00878' 
+                <MainInstantStock
+                    className='etf_00878'
                     stock={{
                         'stock_name': '國泰永續高股息',
                         'stock_id': '00878',
@@ -252,8 +232,8 @@ const Home = ({ onLoad }) => {
                         'data': etfTrend['00878']
                     }]}
                 />
-                <MainInstantStock 
-                    className='etf_00892' 
+                <MainInstantStock
+                    className='etf_00892'
                     stock={{
                         'stock_name': '富邦台灣半導體',
                         'stock_id': '00892',
