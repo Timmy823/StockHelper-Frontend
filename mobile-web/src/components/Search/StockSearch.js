@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import Fuse from 'fuse.js'
 import { accessApiGet } from "../../utils/AccessApiUtils";
+import { domain, api_path } from '../../config/route';
 import "./StockSearch.css"
 import SelectSearch from 'react-select-search'
 
@@ -15,7 +16,7 @@ const StockSearch = () => {
     const [options, setOptions] = useState([]);
 
     const getCompanyList = async (type) => {
-        const req_url = 'http://localhost:5277/twse/getAllCompanyList';
+        const req_url = domain + api_path.stock.get_all_company_list;
         const req_data = {
             'type': type
         }

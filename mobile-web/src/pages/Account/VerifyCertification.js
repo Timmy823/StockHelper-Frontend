@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
 import { accessApiPost } from '../../utils/AccessApiUtils';
+import { domain, api_path } from '../../config/route';
 import {
     MDBContainer,
     MDBInput,
@@ -18,7 +19,7 @@ const VerifyCertification = () => {
     const [certification, setCertification] = useState("");
 
     const sendEmailCertification = async (req_body) => {
-        const req_url = 'http://localhost:5277/member/sendEmailCertification';
+        const req_url = domain + api_path.member.send_certification;
 
         accessApiPost(req_url, req_body, '驗證碼傳送失敗，請聯絡客服');
     };

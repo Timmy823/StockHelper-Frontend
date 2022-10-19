@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { accessApiPost } from '../../utils/AccessApiUtils';
+import { domain, api_path } from '../../config/route';
 import {
     MDBBtn,
     MDBModal,
@@ -43,7 +44,7 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
     }, [editing])
 
     const addList = async (favorite_list_name) => {
-        const req_url = 'http://localhost:5277/member/addFavoriteListName';
+        const req_url = domain + api_path.member.add_favorite_list;
         const req_data = {
             'member_account': account,
             'favorite_list_name': favorite_list_name
@@ -71,7 +72,7 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
     };
 
     const editList = async (favorite_list_name, new_favorite_list_name) => {
-        const req_url = 'http://localhost:5277/member/updateFavoriteListName';
+        const req_url = domain + api_path.member.rename_favorite_list;
         const req_data = {
             'member_account': account,
             'favorite_list_name': favorite_list_name,
@@ -98,7 +99,7 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
     };
 
     const deleteList = async (favorite_list_name) => {
-        const req_url = 'http://localhost:5277/member/deleteFavoriteListName';
+        const req_url = domain + api_path.member.delete_favorite_list;
         const req_data = {
             'member_account': account,
             'favorite_list_name': favorite_list_name
