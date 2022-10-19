@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
+import { accessApiPost } from '../../utils/AccessApiUtils';
 import {
     MDBContainer,
     MDBInput,
@@ -17,27 +18,9 @@ const VerifyCertification = () => {
     const [certification, setCertification] = useState("");
 
     const sendEmailCertification = async (req_body) => {
-        const request = await fetch('http://localhost:5277/member/sendEmailCertification', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(req_body)
-        });
+        const req_url = 'http://localhost:5277/member/sendEmailCertification';
 
-        let response = await request.json();
-        if (request.status === 200) {
-            return response;
-        } else {
-            return {
-                "metadata": {
-                    "status": "error",
-                    "desc": "驗證碼傳送失敗，請聯絡客服"
-                },
-                "data": {
-                }
-            };
-        }
+        accessApiPost(req_url, req_body, '驗證碼傳送失敗，請聯絡客服');
     };
 
     function randomString(e) {
@@ -126,7 +109,7 @@ const VerifyCertification = () => {
                             'member_account': member_account,
                             'certification_code': code
                         });
-            
+
                         setCertification(code);
                     }
                 }> 重新發送驗證碼</MDBBtn>
