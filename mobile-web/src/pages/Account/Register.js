@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
 import { accessApiPost } from '../../utils/AccessApiUtils';
+import { domain, api_path } from '../../config/route';
 import {
     MDBContainer,
     MDBInput,
@@ -17,7 +18,7 @@ import './Account.css';
 const Register = () => {
     const navigate = useNavigate();
     const createMember = async (req_body) => {
-        const req_url = 'http://localhost:5277/member/createMember';
+        const req_url = domain + api_path.member.create_member;
 
         accessApiPost(req_url, req_body, '註冊失敗，請聯絡客服')
             .then((response) => {

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
 import { accessApiPost } from '../../utils/AccessApiUtils';
+import { domain, api_path } from '../../config/route';
 import {
     MDBContainer,
     MDBInput,
@@ -15,7 +16,7 @@ const ResetPassword = () => {
     const navigate = useNavigate();
     const { account } = useLocation();
     const updateMember = async (password) => {
-        const req_url = 'http://localhost:5277/member/updateMember';
+        const req_url = domain + api_path.member.update_member;
         const req_data = {
             "member_account": account,
             "update_data": {

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react"
-import { MDBContainer } from "mdb-react-ui-kit";
-import { accessApiGet } from "../../utils/AccessApiUtils";
-import MainInstantStock from "../../components/Card/MainInstantStock";
-import "./Home.css"
+import React, { useEffect, useState } from 'react'
+import { MDBContainer } from 'mdb-react-ui-kit';
+import { accessApiGet } from '../../utils/AccessApiUtils';
+import { domain, api_path } from '../../config/route';
+import MainInstantStock from '../../components/Card/MainInstantStock';
+import './Home.css'
 
 const Home = ({ onLoad }) => {
     const [indexTrend, setIndexTrend] = useState({});
@@ -31,7 +32,7 @@ const Home = ({ onLoad }) => {
     };
 
     const getRecentStockClosingPrice = async (stock_id) => {
-        const req_url = 'http://localhost:5277/twse/getStockTradeInfo';
+        const req_url = domain + api_path.stock.get_recent_half_year_stock_info;
         const req_data = {
             'stock_id': stock_id
         };

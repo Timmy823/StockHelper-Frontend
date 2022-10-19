@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { resolvePath, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from "yup";
 import { setAuthToken, getAuthToken } from '../../utils/TokenUtils';
 import { accessApiPost } from '../../utils/AccessApiUtils';
+import { domain, api_path } from '../../config/route';
 import {
     MDBContainer,
     MDBInput,
@@ -21,7 +22,7 @@ const Login = () => {
     const login_token = 'account_info';
 
     const Login = async (request) => {
-        const req_url = 'http://localhost:5277/member/getMemberInfo';
+        const req_url = domain + api_path.member.get_member_info;
         const req_body = {
             "member_account": request.account,
             "password": request.password

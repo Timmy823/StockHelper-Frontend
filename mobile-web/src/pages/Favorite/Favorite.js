@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuthToken } from '../../utils/TokenUtils';
 import { accessApiGet } from '../../utils/AccessApiUtils';
+import { domain, api_path } from '../../config/route';
 import { MDBBtn, MDBContainer, MDBNavbar, MDBNavbarItem, MDBIcon } from 'mdb-react-ui-kit';
 import ListInstantStock from "../../components/Card/ListInstantStock";
 import EditListWindow from '../../components/Window/EditListWindow';
@@ -20,7 +21,7 @@ const Favorite = ({ onLoad }) => {
     const [ButtonIndex, setButtonIndex] = useState(0);
 
     const getFavoriteListInfo = async (account) => {
-        const req_url = 'http://localhost:5277/member/getFavoriteList';
+        const req_url = domain + api_path.member.get_favorite_list;
         const req_data = {
             'member_account': account
         };
@@ -29,7 +30,7 @@ const Favorite = ({ onLoad }) => {
     };
 
     const getRecentStockClosingPrice = async (stock_id) => {
-        const req_url = 'http://localhost:5277/twse/getStockTradeInfo';
+        const req_url = domain + api_path.stock.get_recent_half_year_stock_info;
         const req_data = {
             'stock_id': stock_id
         };

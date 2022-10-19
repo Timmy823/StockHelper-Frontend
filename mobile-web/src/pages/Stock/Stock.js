@@ -10,6 +10,7 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Dropdown } from 'react-bootstrap';
 import { getAuthToken } from '../../utils/TokenUtils';
 import { accessApiGet, accessApiPost } from '../../utils/AccessApiUtils';
+import { domain, api_path } from '../../config/route';
 import './Stock.css'
 import DividendCard from '../../components/Card/DividendCard';
 import CompanyProfile from '../../components/Card/CompanyProfile';
@@ -144,7 +145,7 @@ const Stock = ({ onLoad }) => {
     };
 
     const getFavoriteListDetail = (member_account) => {
-        const req_url = 'http://localhost:5277/member/getFavoriteList';
+        const req_url = domain + api_path.member.get_favorite_list;
         const req_data = {
             'member_account': member_account
         };
@@ -169,7 +170,7 @@ const Stock = ({ onLoad }) => {
     }
 
     const addFavoriteListStock = (request) => {
-        const req_url = 'http://localhost:5277/member/addFavoriteListStock';
+        const req_url = domain + api_path.member.add_favorite_list_stock;
         const req_data = {
             'member_account': request.member_account,
             'favorite_list_name': request.list_name,
@@ -189,7 +190,7 @@ const Stock = ({ onLoad }) => {
     }
 
     const deleteFavoriteListStock = (request) => {
-        const req_url = 'http://localhost:5277/member/deleteFavoriteListStock';
+        const req_url = domain + api_path.member.delete_favorite_list_stock;
         const req_data = {
             'member_account': request.member_account,
             'favorite_list_name': request.list_name,
@@ -208,7 +209,7 @@ const Stock = ({ onLoad }) => {
     }
 
     const getDividendInfo = (stock_id) => {
-        const req_url = 'http://localhost:5277/twse/getCompanyDividendPolicy';
+        const req_url = domain + api_path.stock.get_dividend_info;
         const req_data = {
             'stock_id': stock_id
         };
@@ -240,7 +241,7 @@ const Stock = ({ onLoad }) => {
     };
 
     const getCompanyProfile = (stock_id) => {
-        const req_url = 'http://localhost:5277/twse/getCompanyProfile';
+        const req_url = domain + api_path.stock.get_company_profile;
         const req_data = {
             'stock_id': stock_id
         };
@@ -276,7 +277,7 @@ const Stock = ({ onLoad }) => {
     };
 
     const getEps = (stock_id) => {
-        const req_url = 'http://localhost:5277/twse/getStockEps';
+        const req_url = domain + api_path.stock.get_eps_info;
         const req_data = {
             'stock_id': stock_id
         };
@@ -297,7 +298,7 @@ const Stock = ({ onLoad }) => {
     };
 
     const getMonthlyRevenue = (stock_id) => {
-        const req_url = 'http://localhost:5277/twse/getCompanyMonthlyRevenue';
+        const req_url = domain + api_path.stock.get_revenue_info;
         const req_data = {
             'stock_id': stock_id
         };
