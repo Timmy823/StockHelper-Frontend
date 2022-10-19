@@ -54,8 +54,9 @@ const Main = () => {
             </>} />
 
             <Route path='/stock' element={<>
+                {!state&&<Loading />}
                 <StockSearch />
-                <Stock />
+                <Stock onLoad={setState}/>
             </>} />
         </Routes>
     );
