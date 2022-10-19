@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { MDBContainer } from "mdb-react-ui-kit";
+import { accessApiGet } from "../../utils/AccessApiUtils";
 import MainInstantStock from "../../components/Card/MainInstantStock";
 import "./Home.css"
 
@@ -64,27 +65,14 @@ const Home = ({ onLoad }) => {
                 }
             });
     };
+    
+    const getRecentStockClosingPrice = async (stock_id) => {
+        const req_url = 'http://localhost:5277/twse/getStockTradeInfo';
+        const req_data = {
+            'stock_id': stock_id
+        };
 
-    const getRecentStockClosingPrice = async (stock_id, error_message) => {
-        let request = await fetch('http://localhost:5277/twse/getStockTradeInfo?stock_id=' + stock_id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        let response = await request.json();
-        if (request.status === 200) {
-            return response;
-        } else {
-            return {
-                "metadata": {
-                    "status": "error",
-                    "desc": error_message
-                },
-                "data": {}
-            };
-        }
+        return accessApiGet(req_url, req_data, '無法取得近半年收盤價');
     }
 
     const getLastClosingPrice = (trend_data) => {
