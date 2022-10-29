@@ -153,18 +153,22 @@ const Stock = ({ onLoad }) => {
         accessApiGet(req_url, req_data, '無法取得會員我的最愛')
             .then((response) => {
                 if (response.metadata.status === 'success') {
-                    let result = {};
-                    response.data.map((list) => {
-                        result[list['list_name']] = false;
-                        list.stock_list.map((stock) => {
-                            if (stock['stock_id'] === stockTarget['stock_id']) {
-                                result[list['list_name']] = true;
-                                return;
-                            }
+                    if (response.data.length !== 0) {
+                        let result = {};
+                        response.data.map((list) => {
+                            result[list['list_name']] = false;
+                            list.stock_list.map((stock) => {
+                                if (stock.stock_id === stockTarget.stock_id) {
+                                    result[list['list_name']] = true;
+                                    return;
+                                }
+                            });
                         });
-                    });
 
-                    setFavoriteList(result);
+                        setFavoriteList(result);
+                    }
+                } else {
+                    onLoad(true);
                 }
             });
     }
