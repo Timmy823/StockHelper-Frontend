@@ -66,6 +66,8 @@ const Stock = ({ onLoad }) => {
         if ((member = getAuthToken(login_token)) != null) {
             setMember(JSON.parse(member)["member_account"]);
             getFavoriteListDetail(JSON.parse(member)["member_account"]);
+        } else {
+            onLoad(true);
         }
     }, [stockTarget]);
 
