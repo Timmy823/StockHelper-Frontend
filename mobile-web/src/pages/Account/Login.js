@@ -126,6 +126,12 @@ const Login = () => {
                     </MDBBtn>
                 </div>
             </div>
+
+            <div className='default justify-content-between mx-auto' style={{ color: '#fff' }}>
+                <p></p>
+                <p>帳號: stockhelpler.service@gmail.com</p>
+                <p>密碼: 12345678aA </p>
+            </div>
         </MDBContainer>
     );
 }
