@@ -21,7 +21,7 @@ const Favorite = ({ onLoad }) => {
     const [ButtonIndex, setButtonIndex] = useState(0);
 
     const getFavoriteListInfo = async (account) => {
-        const req_url = domain + api_path.member.get_favorite_list;
+        const req_url = domain + api_path.list.get_favorite_list;
         const req_data = {
             'member_account': account
         };

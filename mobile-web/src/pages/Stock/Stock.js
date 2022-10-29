@@ -145,7 +145,7 @@ const Stock = ({ onLoad }) => {
     };
 
     const getFavoriteListDetail = (member_account) => {
-        const req_url = domain + api_path.member.get_favorite_list;
+        const req_url = domain + api_path.list.get_favorite_list;
         const req_data = {
             'member_account': member_account
         };
@@ -174,7 +174,7 @@ const Stock = ({ onLoad }) => {
     }
 
     const addFavoriteListStock = (request) => {
-        const req_url = domain + api_path.member.add_favorite_list_stock;
+        const req_url = domain + api_path.list.add_favorite_list_stock;
         const req_data = {
             'member_account': request.member_account,
             'favorite_list_name': request.list_name,
@@ -194,7 +194,7 @@ const Stock = ({ onLoad }) => {
     }
 
     const deleteFavoriteListStock = (request) => {
-        const req_url = domain + api_path.member.delete_favorite_list_stock;
+        const req_url = domain + api_path.list.delete_favorite_list_stock;
         const req_data = {
             'member_account': request.member_account,
             'favorite_list_name': request.list_name,

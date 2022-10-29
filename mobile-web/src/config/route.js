@@ -13,13 +13,13 @@ export const api_path = {
         'create_member':'/member/createMember',
         'update_member':'/member/updateMember',
         'send_certification': '/member/sendEmailCertification',
-        'get_favorite_list': '/member/getFavoriteList',
-        'add_favorite_list': '/member/addFavoriteListName',
-        'rename_favorite_list': '/member/updateFavoriteListName',
-        'delete_favorite_list': '/member/deleteFavoriteListName',
-        'add_favorite_list_stock': '/member/addFavoriteListStock',
-        'delete_favorite_list_stock': '/member/deleteFavoriteListStock',
     },
     'list': {
+        'get_favorite_list': '/favorite_list/getFavoriteList',
+        'add_favorite_list': '/favorite_list/addFavoriteListName',
+        'rename_favorite_list': '/favorite_list/updateFavoriteListName',
+        'delete_favorite_list': '/favorite_list/deleteFavoriteListName',
+        'add_favorite_list_stock': '/favorite_list/addFavoriteListStock',
+        'delete_favorite_list_stock': '/favorite_list/deleteFavoriteListStock',
     }
 };

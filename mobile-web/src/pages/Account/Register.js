@@ -41,7 +41,7 @@ const Register = () => {
     };
 
     const addList = async (member_account) => {
-        const req_url = domain + api_path.member.add_favorite_list;
+        const req_url = domain + api_path.list.add_favorite_list;
         const req_data = {
             'member_account': member_account,
             'favorite_list_name': '預設'
