@@ -22,11 +22,13 @@ const Register = () => {
 
         accessApiPost(req_url, req_body, '註冊失敗，請聯絡客服')
             .then((response) => {
-                if (response.metadata.status == 'success')
+                if (response.metadata.status == 'success') {
+                    addList(req_body.member_account);
                     navigate('/login', {
                         state: '/account'
                     });
-
+                }
+                    
                 document.getElementsByClassName('register-message')[0].innerHTML = response.metadata.desc;
                 document.getElementsByClassName('register-message')[0].classList.remove("hidden");
                 document.getElementsByClassName('register-message')[0].classList.add("active");
@@ -37,6 +39,16 @@ const Register = () => {
                 console.log(error);
             });
     };
+
+    const addList = async (member_account) => {
+        const req_url = domain + api_path.list.add_favorite_list;
+        const req_data = {
+            'member_account': member_account,
+            'favorite_list_name': '預設'
+        };
+    
+        accessApiPost(req_url, req_data, '無法新增我的最愛列表');
+    }
 
     return (
         <MDBContainer className="register-container p-3 mt-1 mb-6 d-flex flex-column w-100">

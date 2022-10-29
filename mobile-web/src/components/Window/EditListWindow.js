@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { accessApiPost } from '../../utils/AccessApiUtils';
 import { domain, api_path } from '../../config/route';
+import HintWindow from './HintWindow';
 import {
     MDBBtn,
     MDBModal,
@@ -16,11 +17,13 @@ import {
     MDBInput,
     MDBCol,
 } from 'mdb-react-ui-kit';
-import './EditListWindow.css'
+import './Window.css'
 
 const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
     const [list, setList] = useState([]);
     const [editing, setEditing] = useState({});
+    const [hintWindow, setHintWindow] = useState(false);
+    const [errorMessage, setErrorMessage] = useState();
 
     useEffect(() => {
         let list_array = [];
@@ -43,8 +46,11 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
     useEffect(() => {
     }, [editing])
 
+    useEffect(() => {
+    }, [hintWindow, errorMessage])
+
     const addList = async (favorite_list_name) => {
-        const req_url = domain + api_path.member.add_favorite_list;
+        const req_url = domain + api_path.list.add_favorite_list;
         const req_data = {
             'member_account': account,
             'favorite_list_name': favorite_list_name
@@ -72,7 +78,7 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
     };
 
     const editList = async (favorite_list_name, new_favorite_list_name) => {
-        const req_url = domain + api_path.member.rename_favorite_list;
+        const req_url = domain + api_path.list.rename_favorite_list;
         const req_data = {
             'member_account': account,
             'favorite_list_name': favorite_list_name,
@@ -82,11 +88,6 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
         accessApiPost(req_url, req_data, '無法編輯我的最愛列表')
             .then((response) => {
                 if (response.metadata.status === 'success') {
-                    setList(prevState => ([
-                        ...prevState.filter(item => item !== favorite_list_name),
-                        new_favorite_list_name
-                    ]));
-
                     setFavoriteList(data.map((element) => {
                         if (element.list_name === favorite_list_name) {
                             element.list_name = new_favorite_list_name;
@@ -95,11 +96,16 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
                         return element;
                     }));
                 }
+
+                setEditing(prevState => ({
+                    ...prevState,
+                    [favorite_list_name]: false
+                }));
             });
     };
 
     const deleteList = async (favorite_list_name) => {
-        const req_url = domain + api_path.member.delete_favorite_list;
+        const req_url = domain + api_path.list.delete_favorite_list;
         const req_data = {
             'member_account': account,
             'favorite_list_name': favorite_list_name
@@ -107,8 +113,18 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
 
         accessApiPost(req_url, req_data, '無法刪除我的最愛列表')
             .then((response) => {
+                console.log(response)
                 if (response.metadata.status === 'success') {
                     setFavoriteList(data.filter(item => item.list_name !== favorite_list_name));
+                    setList(list.filter(item => item !== favorite_list_name));
+                } else {
+                    setHintWindow(true);
+                    setErrorMessage('必須擁有一個列表');
+
+                    setEditing(prevState => ({
+                        ...prevState,
+                        [favorite_list_name]: false
+                    }));
                 }
             });
     };
@@ -136,10 +152,10 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
                                     {editing[element] &&
                                         <MDBRow>
                                             <MDBCol size='8'>
-                                                <MDBInput name='edit-list-input' defaultValue={element} onChange={(e)=>{
+                                                <MDBInput name='edit-list-input' defaultValue={element} onChange={(e) => {
                                                     const target = document.getElementsByName('edit')[0];
                                                     target.disabled = (e.target.value.length === 0);
-                                                }}/>
+                                                }} />
                                             </MDBCol>
                                             <MDBBtn className='col-auto' name='edit' onClick={() => {
                                                 const new_list_name = document.getElementsByName('edit-list-input')[0].value;
@@ -148,8 +164,6 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
                                         </MDBRow> || element
                                     }
                                     <MDBBtn className='btn-close' color='none' onClick={() => {
-                                        setList(list.filter(item => item !== element));
-                                        
                                         deleteList(element);
                                     }} disabled={editing[element]}></MDBBtn>
                                 </MDBListGroupItem>
@@ -176,6 +190,14 @@ const EditListWindow = ({ show, setShow, setFavoriteList, account, data }) => {
                     </MDBModalFooter>
                 </MDBModalContent>
             </MDBModalDialog>
+            {
+                hintWindow && 
+                <HintWindow
+                    show={hintWindow}
+                    setShow={setHintWindow}
+                    message={errorMessage}
+                />
+            }
         </MDBModal>
     );
 };

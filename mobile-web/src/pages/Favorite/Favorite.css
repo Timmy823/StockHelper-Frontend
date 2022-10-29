@@ -19,7 +19,7 @@
 
 .favorite-page .btn-floating {
     position: fixed;
-    top: 600px;
+    bottom: 100px;
     left: 310px;
     width: 3.8125rem;
     height: 3.8125rem;
